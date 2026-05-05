@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>NEXTECH Sentinel | Araçlar</title>
+    <link rel="stylesheet" href="css/panel.css">
+    <style>
+        body { display:flex; min-height:100vh; overflow-x:hidden; }
+        .topbar input {
+            margin-left: 20px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #2a2d35;
+            background: #22262f;
+            color: #e2e4e9;
+            font-size: 13px;
+            width: 220px;
+            outline: none;
+        }
+        .topbar input::placeholder { color: #6b7280; }
+        .topbar input:focus { border-color: #2563eb; }
+
+        .vehicle-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            padding: 28px 32px;
+        }
+
+        .vehicle-card {
+            background: #1c1f27;
+            border: 1px solid #2a2d35;
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .vehicle-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+            border-color: #3b5bdb;
+        }
+        .vehicle-card img {
+            width: 80px;
+            height: 60px;
+            object-fit: contain;
+            filter: brightness(0.9);
+        }
+        .vehicle-info { text-align: center; }
+        .vehicle-info h4 { font-size: 14px; font-weight: 600; color: #e2e4e9; margin-bottom: 6px; }
+        .vehicle-info p  { font-size: 12px; color: #6b7280; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo">
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="drivers.html">Sürücüler</a></li>
+    <li class="active"><a href="vehicles.html">Araçlar</a></li>
+    <li><a href="reports.html">Raporlar</a></li>
+    <li><a href="harita.html">Harita / Rota</a></li>
+    <li><a href="karsilastirma.html">Karşılaştırma</a></li>
+  </ul>
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span id="themeLabel">🌙 Koyu Mod</span>
+  <div class="toggle-switch"></div>
+</div>
+</div>
+
+<main class="content" style="margin-left:240px; flex:1; min-width:0;">
+    <header class="topbar">
+        <h1>Araç Listesi</h1>
+        <input type="text" id="searchInput" placeholder="Plaka ile ara..." />
+    </header>
+
+    <div class="vehicle-list" id="vehicleList">
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Actros</h4><p>Plaka: 34ABC001</p><p>Sürücü: Ahmet Yılmaz</p></div></div>
+        <div class="vehicle-card"><img src="assets/scania.png" alt="Scania"><div class="vehicle-info"><h4>Scania R500</h4><p>Plaka: 06DEF002</p><p>Sürücü: Mehmet Kaya</p></div></div>
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Arocs</h4><p>Plaka: 34GHI003</p><p>Sürücü: Can Demir</p></div></div>
+        <div class="vehicle-card"><img src="assets/scania.png" alt="Scania"><div class="vehicle-info"><h4>Scania S730</h4><p>Plaka: 07JKL004</p><p>Sürücü: Ali Özkan</p></div></div>
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Actros</h4><p>Plaka: 34MNO005</p><p>Sürücü: Emre Şahin</p></div></div>
+        <div class="vehicle-card"><img src="assets/scania.png" alt="Scania"><div class="vehicle-info"><h4>Scania R450</h4><p>Plaka: 06PQR006</p><p>Sürücü: Burak Aydın</p></div></div>
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Arocs</h4><p>Plaka: 34STU007</p><p>Sürücü: Onur Kılıç</p></div></div>
+        <div class="vehicle-card"><img src="assets/scania.png" alt="Scania"><div class="vehicle-info"><h4>Scania R500</h4><p>Plaka: 07VWX008</p><p>Sürücü: Serkan Yıldız</p></div></div>
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Actros</h4><p>Plaka: 34YZA009</p><p>Sürücü: Mert Koç</p></div></div>
+        <div class="vehicle-card"><img src="assets/scania.png" alt="Scania"><div class="vehicle-info"><h4>Scania S500</h4><p>Plaka: 06BCD010</p><p>Sürücü: Ali Çetin</p></div></div>
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Actros</h4><p>Plaka: 34EFG011</p><p>Sürücü: Hakan Arslan</p></div></div>
+        <div class="vehicle-card"><img src="assets/scania.png" alt="Scania"><div class="vehicle-info"><h4>Scania R520</h4><p>Plaka: 07HIJ012</p><p>Sürücü: Furkan Öz</p></div></div>
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Arocs</h4><p>Plaka: 34KLM013</p><p>Sürücü: Yusuf Polat</p></div></div>
+        <div class="vehicle-card"><img src="assets/scania.png" alt="Scania"><div class="vehicle-info"><h4>Scania S580</h4><p>Plaka: 06NOP014</p><p>Sürücü: Kaan Uslu</p></div></div>
+        <div class="vehicle-card"><img src="assets/mercedes.png" alt="Mercedes"><div class="vehicle-info"><h4>Mercedes Actros</h4><p>Plaka: 34QRS015</p><p>Sürücü: Oğuzhan Er</p></div></div>
+    </div>
+</main>
+
+<script>
+const searchInput = document.getElementById('searchInput');
+const vehicleList = document.getElementById('vehicleList');
+searchInput.addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    const cards = vehicleList.getElementsByClassName('vehicle-card');
+    for (let card of cards) {
+        const plate = card.querySelector('p').textContent.toLowerCase();
+        card.style.display = plate.includes(query) ? 'flex' : 'none';
+    }
+});
+</script>
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  }
+})();
+</script>
+</body>
+</html>

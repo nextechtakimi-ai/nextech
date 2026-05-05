@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>NEXTECH Sentinel | Karşılaştırma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/panel.css">
+  <style>
+    /* ── COMPARE HEADER ── */
+    .compare-header {
+      display: flex;
+      gap: 14px;
+      align-items: flex-end;
+      padding: 28px 32px 0;
+      flex-wrap: wrap;
+    }
+    .compare-header > div {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .compare-header label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .compare-header select {
+      padding: 10px 14px;
+      border: 1px solid #2a2d35;
+      border-radius: 10px;
+      font-size: 13px;
+      min-width: 190px;
+      background: #22262f;
+      color: #e2e4e9;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+    .compare-header select:focus {
+      border-color: #3b82f6;
+      background-color: #1e2229;
+    }
+    .compare-btn {
+      padding: 10px 24px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+      letter-spacing: 0.2px;
+    }
+    .compare-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    }
+    .compare-btn:active { transform: translateY(0); }
+
+    /* ── LAYOUT ── */
+    .compare-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 0;
+      padding: 24px 32px 40px;
+      align-items: start;
+    }
+
+    /* ── VS DIVIDER ── */
+    .vs-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 80px;
+    }
+    .vs-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1c1f27;
+      border: 1px solid #2a2d35;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #6b7280;
+      letter-spacing: 1px;
+    }
+    .vs-line {
+      width: 1px;
+      height: 180px;
+      background: linear-gradient(to bottom, transparent, #2a2d35 30%, #2a2d35 70%, transparent);
+    }
+
+    /* ── DRIVER CARD ── */
+    .driver-card {
+      background: #1c1f27;
+      border: 1px solid #2a2d35;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .driver-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+      transform: translateY(-3px);
+      border-color: #3b4155;
+    }
+
+    /* ── CARD HEADER ── */
+    .driver-card-header {
+      background: #16191f;
+      border-bottom: 1px solid #2a2d35;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .driver-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .driver-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid #2563eb;
+      object-fit: cover;
+      display: block;
+    }
+    .online-dot {
+      position: absolute;
+      bottom: 2px; right: 2px;
+      width: 11px; height: 11px;
+      background: #22c55e;
+      border-radius: 50%;
+      border: 2px solid #16191f;
+    }
+    .driver-card-header .info strong {
+      color: #f0f2f5;
+      font-size: 15px;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .driver-card-header .info span {
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .winner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(250,197,24,0.12);
+      color: #fbbf24;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.8px;
+      border: 1px solid rgba(250,197,24,0.25);
+      margin-top: 5px;
+    }
+    .winner-badge::before { content: '★'; font-size: 9px; }
+
+    /* ── SCORE RING ── */
+    .score-ring-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px 22px 10px;
+      gap: 20px;
+    }
+    .ring-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .ring-container svg { transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: #22262f; stroke-width: 6; }
+    .ring-fill {
+      fill: none;
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1);
+    }
+    .ring-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .ring-val {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f0f2f5;
+      line-height: 1;
+    }
+    .ring-sub {
+      font-size: 9px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .ring-info { flex: 1; }
+    .ring-info-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e4e9;
+      margin-bottom: 6px;
+    }
+    .ring-info-sub {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    /* ── STAT BARS ── */
+    .driver-stats {
+      padding: 6px 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .stat-row { display: flex; flex-direction: column; gap: 6px; }
+    .stat-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-val {
+      font-size: 12px;
+      font-weight: 700;
+      color: #e2e4e9;
+    }
+    .stat-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: #22262f;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.9s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── DIVIDER ── */
+    .card-divider {
+      height: 1px;
+      background: #2a2d35;
+      margin: 0 22px;
+    }
+
+    /* ── NUMBER GRID ── */
+    .stat-numbers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 16px 22px 22px;
+    }
+    .num-box {
+      background: #22262f;
+      border: 1px solid #2a2d35;
+      border-radius: 10px;
+      padding: 12px 14px;
+      text-align: center;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .num-box:hover {
+      border-color: #3b4155;
+      background: #252930;
+    }
+    .num-box-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: #f0f2f5;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .num-box-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── HIGHLIGHT NUM ── */
+    .num-box.highlight .num-box-val { color: #60a5fa; }
+    .num-box.danger .num-box-val    { color: #f87171; }
+    .num-box.success .num-box-val   { color: #4ade80; }
+
+    /* ── FADE IN ANIMATION ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .driver-card { animation: fadeUp 0.4s ease both; }
+    #card1 .driver-card { animation-delay: 0.05s; }
+    #card2 .driver-card { animation-delay: 0.15s; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+  <div style="display:none;font-size:15px;font-weight:700;color:#60a5fa;padding:0 8px;margin-bottom:28px;">NEXTECH</div>
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="drivers.html">Sürücüler</a></li>
+    <li><a href="vehicles.html">Araçlar</a></li>
+    <li><a href="reports.html">Raporlar</a></li>
+    <li><a href="harita.html">Harita / Rota</a></li>
+    <li class="active"><a href="karsilastirma.html">Karşılaştırma</a></li>
+  </ul>
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span id="themeLabel">🌙 Koyu Mod</span>
+  <div class="toggle-switch"></div>
+</div>
+</div>
+
+<main class="content">
+  <header class="topbar">
+    <h1>Sürücü Karşılaştırma</h1>
+    <span style="font-size:12px;color:#6b7280;">İki sürücüyü yan yana inceleyin</span>
+  </header>
+
+  <div class="compare-header">
+    <div>
+      <label>1. Sürücü</label>
+      <select id="d1">
+        <option value="0">Ahmet Yılmaz</option>
+        <option value="1">Mehmet Kaya</option>
+        <option value="2">Can Demir</option>
+        <option value="3">Emre Şahin</option>
+        <option value="4">Burak Aydın</option>
+        <option value="5">Onur Kılıç</option>
+      </select>
+    </div>
+    <div>
+      <label>2. Sürücü</label>
+      <select id="d2">
+        <option value="1">Mehmet Kaya</option>
+        <option value="0">Ahmet Yılmaz</option>
+        <option value="2">Can Demir</option>
+        <option value="3">Emre Şahin</option>
+        <option value="4">Burak Aydın</option>
+        <option value="5">Onur Kılıç</option>
+      </select>
+    </div>
+    <button class="compare-btn" onclick="render()">Karşılaştır</button>
+  </div>
+
+  <div class="compare-grid-3" id="output" style="display:none">
+    <div id="card1"></div>
+    <div class="vs-divider">
+      <div class="vs-line"></div>
+      <div class="vs-circle">VS</div>
+      <div class="vs-line"></div>
+    </div>
+    <div id="card2"></div>
+  </div>
+</main>
+
+<script>
+var drivers = [
+  { ad:"Ahmet Yılmaz",  img:"https://i.pravatar.cc/100?img=12", unvan:"Kıdemli Sürücü",
+    perf:92, guven:88, tutarlilik:90, sefer:156, uyari:40, hatasiz:118, puan:92 },
+  { ad:"Mehmet Kaya",   img:"https://i.pravatar.cc/100?img=32", unvan:"Sürücü",
+    perf:78, guven:72, tutarlilik:65, sefer:98,  uyari:63, hatasiz:61,  puan:78 },
+  { ad:"Can Demir",     img:"https://i.pravatar.cc/100?img=45", unvan:"Sürücü",
+    perf:88, guven:84, tutarlilik:82, sefer:112, uyari:51, hatasiz:87,  puan:88 },
+  { ad:"Emre Şahin",   img:"https://i.pravatar.cc/100?img=18", unvan:"Sürücü",
+    perf:81, guven:79, tutarlilik:78, sefer:104, uyari:55, hatasiz:74,  puan:81 },
+  { ad:"Burak Aydın",  img:"https://i.pravatar.cc/100?img=21", unvan:"Yeni Sürücü",
+    perf:74, guven:68, tutarlilik:60, sefer:76,  uyari:72, hatasiz:48,  puan:74 },
+  { ad:"Onur Kılıç",   img:"https://i.pravatar.cc/100?img=27", unvan:"Kıdemli Sürücü",
+    perf:89, guven:91, tutarlilik:88, sefer:134, uyari:44, hatasiz:102, puan:89 },
+];
+
+function barColor(v) {
+  if (v >= 85) return '#4ade80';
+  if (v >= 70) return '#60a5fa';
+  return '#f87171';
+}
+
+function ringColor(v) {
+  if (v >= 85) return '#4ade80';
+  if (v >= 70) return '#60a5fa';
+  return '#f87171';
+}
+
+function makeRing(val) {
+  var r = 34;
+  var circ = 2 * Math.PI * r;
+  var dash = (val / 100) * circ;
+  var color = ringColor(val);
+  return '<div class="ring-container">' +
+    '<svg viewBox="0 0 80 80" width="80" height="80">' +
+      '<circle class="ring-bg" cx="40" cy="40" r="' + r + '"/>' +
+      '<circle class="ring-fill" cx="40" cy="40" r="' + r + '"' +
+        ' stroke="' + color + '"' +
+        ' stroke-dasharray="' + circ + '"' +
+        ' stroke-dashoffset="' + (circ - dash) + '"' +
+      '/>' +
+    '</svg>' +
+    '<div class="ring-label">' +
+      '<span class="ring-val">%' + val + '</span>' +
+      '<span class="ring-sub">Puan</span>' +
+    '</div>' +
+  '</div>';
+}
+
+function makeCard(d, isWinner) {
+  return '<div class="driver-card">' +
+
+    '<div class="driver-card-header">' +
+      '<div class="driver-avatar-wrap">' +
+        '<img class="driver-avatar" src="' + d.img + '">' +
+        '<div class="online-dot"></div>' +
+      '</div>' +
+      '<div class="info">' +
+        '<strong>' + d.ad + '</strong>' +
+        '<span>' + d.unvan + '</span>' +
+        (isWinner ? '<div class="winner-badge">ÖNDE</div>' : '') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="score-ring-wrap">' +
+      makeRing(d.puan) +
+      '<div class="ring-info">' +
+        '<div class="ring-info-title">Genel Performans</div>' +
+        '<div class="ring-info-sub">' + d.sefer + ' toplam sefer</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="driver-stats">' +
+      statRow('Performans', d.perf) +
+      statRow('Güvenli Sürüş', d.guven) +
+      statRow('Tutarlılık', d.tutarlilik) +
+    '</div>' +
+
+    '<div class="card-divider"></div>' +
+
+    '<div class="stat-numbers">' +
+      numBox(d.sefer,   'Toplam Sefer', 'highlight') +
+      numBox(d.uyari,   'Uyarı',        'danger')    +
+      numBox(d.hatasiz, 'Hatasız Sefer','success')   +
+      numBox('%' + d.puan, 'Genel Puan','')           +
+    '</div>' +
+
+  '</div>';
+}
+
+function statRow(lbl, val) {
+  return '<div class="stat-row">' +
+    '<div class="stat-row-top">' +
+      '<span class="stat-label">' + lbl + '</span>' +
+      '<span class="stat-val">%' + val + '</span>' +
+    '</div>' +
+    '<div class="stat-bar-bg">' +
+      '<div class="stat-bar-fill" style="width:' + val + '%;background:' + barColor(val) + '"></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function numBox(val, lbl, cls) {
+  return '<div class="num-box ' + (cls||'') + '">' +
+    '<div class="num-box-val">' + val + '</div>' +
+    '<div class="num-box-lbl">' + lbl + '</div>' +
+  '</div>';
+}
+
+function render() {
+  var d1 = drivers[+document.getElementById('d1').value];
+  var d2 = drivers[+document.getElementById('d2').value];
+  document.getElementById('card1').innerHTML = makeCard(d1, d1.puan > d2.puan);
+  document.getElementById('card2').innerHTML = makeCard(d2, d2.puan > d1.puan);
+  document.getElementById('output').style.display = 'grid';
+}
+
+render();
+</script>
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  }
+})();
+</script>
+</body>
+</html>

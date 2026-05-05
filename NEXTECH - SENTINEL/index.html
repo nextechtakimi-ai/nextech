@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>NEXTECH Sentinel | Yönetim Paneli</title>
+    <link rel="stylesheet" href="css/panel.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo">
+  <ul>
+    <li class="active"><a href="index.html">Dashboard</a></li>
+    <li><a href="drivers.html">Sürücüler</a></li>
+    <li><a href="vehicles.html">Araçlar</a></li>
+    <li><a href="reports.html">Raporlar</a></li>
+    <li><a href="harita.html">Harita / Rota</a></li>
+    <li><a href="karsilastirma.html">Karşılaştırma</a></li>
+  </ul>
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <span id="themeLabel">🌙 Koyu Mod</span>
+    <div class="toggle-switch"></div>
+  </div>
+</div>
+
+<main class="content">
+
+    <header class="topbar">
+        <h1>Sentinel Dashboard</h1>
+        <span></span>
+    </header>
+
+    <section class="cards">
+        <div class="card"><h2>Toplam Araç</h2><p>586</p></div>
+        <div class="card"><h2>Aktif Sürücü</h2><p>249</p></div>
+        <div class="card"><h2>Aylık Uyarı</h2><p>312</p></div>
+        <div class="card"><h2>Riskli Sürücü</h2><p>52</p></div>
+    </section>
+
+    <section class="chart-section">
+      <div class="dashboard-row">
+
+        <div class="chart-card">
+          <h3>📊 Performans Grafiği</h3>
+          <div class="chart">
+            <div class="bar" style="--value: 85; --color:#1e90ff;" data-value="85"><span>Sürücü 1</span></div>
+            <div class="bar" style="--value: 72; --color:#28a745;" data-value="72"><span>Sürücü 2</span></div>
+            <div class="bar" style="--value: 90; --color:#ff9800;" data-value="90"><span>Sürücü 3</span></div>
+            <div class="bar" style="--value: 65; --color:#e91e63;" data-value="65"><span>Sürücü 4</span></div>
+            <div class="bar" style="--value: 78; --color:#9c27b0;" data-value="78"><span>Sürücü 5</span></div>
+            <div class="bar" style="--value: 88; --color:#009688;" data-value="88"><span>Sürücü 6</span></div>
+            <div class="bar" style="--value: 70; --color:#795548;" data-value="70"><span>Sürücü 7</span></div>
+            <div class="bar" style="--value: 95; --color:#3f51b5;" data-value="95"><span>Sürücü 8</span></div>
+            <div class="bar" style="--value: 60; --color:#f44336;" data-value="60"><span>Sürücü 9</span></div>
+            <div class="bar" style="--value: 82; --color:#00bcd4;" data-value="82"><span>Sürücü 10</span></div>
+          </div>
+        </div>
+
+        <div class="leaderboard">
+          <h3>🏆 Başarı Sıralaması</h3>
+          <ul>
+            <li class="gold">1. Sürücü 8 <span>95%</span></li>
+            <li class="silver">2. Sürücü 3 <span>90%</span></li>
+            <li class="bronze">3. Sürücü 6 <span>88%</span></li>
+            <li>4. Sürücü 1 <span>85%</span></li>
+            <li>5. Sürücü 10 <span>82%</span></li>
+            <li>6. Sürücü 5 <span>78%</span></li>
+            <li>7. Sürücü 2 <span>72%</span></li>
+            <li>8. Sürücü 7 <span>70%</span></li>
+            <li>9. Sürücü 4 <span>65%</span></li>
+            <li>10. Sürücü 9 <span>60%</span></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="user-panel">
+      <h3>👤 Aktif Sürücüler</h3>
+      <div class="user-list">
+        <div class="user"><img src="https://i.pravatar.cc/100?img=12"><div><strong>Ahmet Yılmaz</strong><span>Performans: %92</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=32"><div><strong>Mehmet Kaya</strong><span>Performans: %78</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=45"><div><strong>Can Demir</strong><span>Performans: %88</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=18"><div><strong>Emre Şahin</strong><span>Performans: %81</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=21"><div><strong>Burak Aydın</strong><span>Performans: %74</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=27"><div><strong>Onur Kılıç</strong><span>Performans: %89</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=33"><div><strong>Serkan Yıldız</strong><span>Performans: %67</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=41"><div><strong>Mert Koç</strong><span>Performans: %85</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=50"><div><strong>Ali Çetin</strong><span>Performans: %73</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=56"><div><strong>Hakan Arslan</strong><span>Performans: %90</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=60"><div><strong>Furkan Öz</strong><span>Performans: %76</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=65"><div><strong>Yusuf Polat</strong><span>Performans: %83</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=19"><div><strong>Kaan Uslu</strong><span>Performans: %69</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=17"><div><strong>Oğuzhan Martin</strong><span>Performans: %87</span></div><button>Detay</button></div>
+        <div class="user"><img src="https://i.pravatar.cc/100?img=15"><div><strong>Erdem Keskinci</strong><span>Performans: %71</span></div><button>Detay</button></div>
+      </div>
+    </div>
+
+</main>
+
+<!-- Detay Modal -->
+<div class="modal" id="userModal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3 id="modalName">Sürücü Adı</h3>
+    <p>🚗 Çıkılan Sefer Sayısı: <strong id="modalTrips">58</strong></p>
+    <p>📊 Performans: <strong id="modalPerf">%85</strong></p>
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  }
+})();
+</script>
+
+</body>
+</html>

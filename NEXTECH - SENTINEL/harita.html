@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>NEXTECH Sentinel | Harita</title>
+  <link rel="stylesheet" href="css/panel.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    #map { height: calc(100vh - 60px); }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo">
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="drivers.html">Sürücüler</a></li>
+    <li><a href="vehicles.html">Araçlar</a></li>
+    <li><a href="reports.html">Raporlar</a></li>
+    <li class="active"><a href="harita.html">Harita / Rota</a></li>
+<li><a href="karsilastirma.html">Karşılaştırma</a></li>
+  </ul>
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span id="themeLabel">🌙 Koyu Mod</span>
+  <div class="toggle-switch"></div>
+</div>
+</div>
+
+<main class="content">
+  <header class="topbar">
+    <h1>Harita / Rota</h1>
+  </header>
+  <div id="map"></div>
+</main>
+
+<script>
+  var map = L.map('map').setView([40.7731, 30.3900], 11);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Ana merkez — Sakarya 1. Organize Sanayi
+  var merkezKoord = [40.7731, 30.3900];
+
+  var merkezIcon = L.divIcon({
+    html: '<div style="background:red;width:18px;height:18px;border-radius:50%;border:3px solid white;box-shadow:0 0 6px rgba(0,0,0,0.5)"></div>',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+    className: ''
+  });
+
+  L.marker(merkezKoord, { icon: merkezIcon })
+    .addTo(map)
+    .bindPopup("<b>🏭 Ana Merkez</b><br>Sakarya 1. Organize Sanayi")
+    .openPopup();
+
+  // Sürücü konumları (kara yollarında)
+  var suruculer = [
+    { ad: "Ahmet Yılmaz",   koord: [40.7420, 30.5260] }, // Sapanca
+    { ad: "Mehmet Kaya",    koord: [40.6940, 30.4380] }, // Arifiye
+    { ad: "Can Demir",      koord: [40.8100, 30.4200] }, // Serdivan
+    { ad: "Emre Şahin",     koord: [40.7900, 30.5500] }, // Karasu yolu
+    { ad: "Burak Aydın",    koord: [40.6800, 30.3200] }, // Hendek yönü
+  ];
+
+  var suruculerIcon = L.divIcon({
+    html: '<div style="background:#1e90ff;width:13px;height:13px;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.4)"></div>',
+    iconSize: [13, 13],
+    iconAnchor: [6, 6],
+    className: ''
+  });
+
+  suruculer.forEach(function(s) {
+    L.marker(s.koord, { icon: suruculerIcon })
+      .addTo(map)
+      .bindPopup("<b>🚗 " + s.ad + "</b><br>Aktif Sefer");
+
+    // Ana merkezden sürücüye rota çizgisi
+    L.polyline([merkezKoord, s.koord], {
+      color: '#1e90ff',
+      weight: 2.5,
+      opacity: 0.7,
+      dashArray: '8, 5'
+    }).addTo(map);
+  });
+
+  // Merkez okunu vurgulamak için küçük çember
+  L.circle(merkezKoord, {
+    color: 'red',
+    fillColor: '#ff000033',
+    fillOpacity: 0.2,
+    radius: 400,
+    weight: 2
+  }).addTo(map);
+</script>
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  }
+})();
+</script>
+</body>
+</html>

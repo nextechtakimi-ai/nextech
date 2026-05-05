@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>NEXTECH Sentinel | Raporlar</title>
+    <link rel="stylesheet" href="css/panel.css">
+    <style>
+        .ai-box {
+            margin: 24px 24px 0 24px;
+            border: 2px solid #7c3aed;
+            border-radius: 14px;
+            padding: 24px 28px;
+            background: linear-gradient(135deg, #1a0a2e11, #7c3aed08);
+            position: relative;
+        }
+        .ai-box-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .ai-box-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #7c3aed;
+            letter-spacing: 0.3px;
+        }
+        .beta-badge {
+            background: linear-gradient(135deg, #f5c518, #e6a800);
+            color: #3a2600;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 1px 4px rgba(230,168,0,0.4);
+        }
+        .ai-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: flex-end;
+        }
+        .ai-form > div {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .ai-form label {
+            font-size: 12px;
+            color: #a78bfa;
+            font-weight: 500;
+        }
+        .ai-form select,
+        .ai-form input {
+            padding: 8px 12px;
+            border: 1px solid #7c3aed55;
+            border-radius: 8px;
+            background: #1a0a2e18;
+            color: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+        .ai-form select:focus,
+        .ai-form input:focus {
+            border-color: #7c3aed;
+        }
+        .ai-btn {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .ai-btn:hover { background: #6d28d9; }
+        .ai-result {
+            margin-top: 16px;
+            padding: 14px 16px;
+            background: #7c3aed11;
+            border-radius: 8px;
+            border-left: 3px solid #7c3aed;
+            font-size: 13px;
+            color: #5b21b6;
+            display: none;
+        }
+        .report-box {
+            margin: 20px 24px 0 24px;
+        }
+        .report-box h2 {
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+        .report-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: flex-end;
+        }
+        .report-form > div {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .report-form label {
+            font-size: 12px;
+            color: #888;
+        }
+        .report-form select,
+        .report-form input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .report-form button {
+            padding: 9px 20px;
+            border-radius: 8px;
+            background: #1e90ff;
+            color: white;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .report-form button:hover { background: #1677cc; }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo">
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="drivers.html">Sürücüler</a></li>
+    <li><a href="vehicles.html">Araçlar</a></li>
+    <li class="active"><a href="reports.html">Raporlar</a></li>
+    <li><a href="harita.html">Harita / Rota</a></li>
+<li><a href="karsilastirma.html">Karşılaştırma</a></li>
+  </ul>
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span id="themeLabel">🌙 Koyu Mod</span>
+  <div class="toggle-switch"></div>
+</div>
+</div>
+
+<main class="content">
+    <header class="topbar">
+        <h1>Raporlar</h1>
+    </header>
+
+    <section class="cards">
+        <div class="card"><h2>Toplam Araç</h2><p>586</p></div>
+        <div class="card"><h2>Aktif Sürücü</h2><p>249</p></div>
+        <div class="card"><h2>Aylık Uyarı</h2><p>312</p></div>
+        <div class="card"><h2>Riskli Sürücü</h2><p>52</p></div>
+    </section>
+
+    <!-- AYLIK RAPOR İNDİRME -->
+    <div class="report-box">
+        <h2>📄 Aylık Rapor İndir</h2>
+        <div class="report-form">
+            <div>
+                <label>Sürücü Seç</label>
+                <select>
+                    <option>Ahmet Yılmaz</option>
+                    <option>Mehmet Kaya</option>
+                    <option>Can Demir</option>
+                    <option>Ali Özkan</option>
+                </select>
+            </div>
+            <div>
+                <label>Ay</label>
+                <input type="month">
+            </div>
+            <a href="assets/rapor_ornek.pdf" download="Surücu_Performans_Raporu.pdf"><button type="button">Raporu İndir</button></a>
+        </div>
+    </div>
+
+    <!-- YAPAY ZEKA ANALİZ BÖLÜMÜ -->
+    <div class="ai-box">
+        <div class="ai-box-header">
+            <span class="ai-box-title">✦ Yapay Zeka Destekli Analiz</span>
+            <span class="beta-badge">BETA</span>
+        </div>
+        <div class="ai-form">
+            <div>
+                <label>Sürücü Seç</label>
+                <select id="aiDriver">
+                    <option>Ahmet Yılmaz</option>
+                    <option>Mehmet Kaya</option>
+                    <option>Can Demir</option>
+                    <option>Ali Özkan</option>
+                </select>
+            </div>
+            <div>
+                <label>Ay</label>
+                <input type="month" id="aiMonth">
+            </div>
+            <button class="ai-btn" onclick="runAnalysis()">Analizi Başlat</button>
+        </div>
+        <div class="ai-result" id="aiResult"></div>
+    </div>
+</main>
+
+<script>
+function runAnalysis() {
+    var driver = document.getElementById('aiDriver').value;
+    var month = document.getElementById('aiMonth').value || 'seçilen dönem';
+    var result = document.getElementById('aiResult');
+
+    result.style.display = 'block';
+    result.innerHTML = '⏳ Analiz yapılıyor...';
+
+    setTimeout(function() {
+        result.innerHTML =
+            '<strong>' + driver + '</strong> için ' + month + ' dönemi analizi tamamlandı.<br><br>' +
+            '📈 Performans skoru ortalamanın <strong>%12 üzerinde</strong>.<br>' +
+            '⚠️ Ani fren sayısı bu ay <strong>3 kez</strong> eşiği aştı.<br>' +
+            '✅ Yakıt verimliliği <strong>iyi seviyede</strong>, iyileştirme önerilmez.<br>' +
+            '🔴 <strong>Öneri:</strong> Sabah 07:00–09:00 saatleri arası sürüş davranışı izlenmeli.';
+    }, 1200);
+}
+</script>
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  }
+})();
+</script>
+</body>
+</html>

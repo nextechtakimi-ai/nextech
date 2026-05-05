@@ -1,0 +1,59 @@
+/* RAPORLAR SAYFASI ÖZEL */
+
+.report-box {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px 35px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  margin-top: 40px;
+}
+
+.report-box h2 {
+  margin-bottom: 25px;
+  font-size: 20px;
+  color: #0a1f44;
+}
+
+.report-form {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.report-form div {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.report-form label {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #0a1f44;
+}
+
+.report-form select,
+.report-form input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background: #f9fafb;
+  color: #0a1f44;
+}
+
+.report-form button {
+  padding: 12px 20px;
+  background: linear-gradient(90deg, #0a1f44, #1e3a8a);
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.report-form button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}

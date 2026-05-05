@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>NEXTECH Sentinel | Sürücüler</title>
+    <link rel="stylesheet" href="css/panel.css">
+    <style>
+        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; }
+        .modal.open { display:flex; }
+        .modal-content {
+            background:#fff; border-radius:14px; padding:28px; width:360px; max-width:90%;
+            position:relative; box-shadow:0 8px 32px rgba(0,0,0,0.18);
+        }
+        .modal-header { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+        .modal-avatar { width:56px; height:56px; border-radius:50%; border:2px solid #1e90ff; }
+        .modal-header h3 { margin:0; font-size:17px; }
+        .modal-header span { font-size:12px; color:#888; }
+        .modal-close { position:absolute; top:14px; right:18px; font-size:20px; cursor:pointer; color:#aaa; background:none; border:none; }
+        .modal-close:hover { color:#333; }
+        .modal-section { margin-bottom:14px; }
+        .modal-section label { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px; }
+        .modal-bio { font-size:13px; color:#444; line-height:1.6; background:#f7f9fc; border-radius:8px; padding:10px 12px; }
+        .modal-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+        .modal-stat { background:#f7f9fc; border-radius:8px; padding:10px; text-align:center; }
+        .modal-stat-val { font-size:20px; font-weight:700; color:#0f1c3a; }
+        .modal-stat-lbl { font-size:10px; color:#888; margin-top:2px; }
+        .perf-bar-bg { height:8px; background:#eee; border-radius:99px; overflow:hidden; margin-top:6px; }
+        .perf-bar-fill { height:100%; border-radius:99px; background:#1e90ff; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo">
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li class="active"><a href="drivers.html">Sürücüler</a></li>
+    <li><a href="vehicles.html">Araçlar</a></li>
+    <li><a href="reports.html">Raporlar</a></li>
+    <li><a href="harita.html">Harita / Rota</a></li>
+    <li><a href="karsilastirma.html">Karşılaştırma</a></li>
+  </ul>
+<div class="theme-toggle" onclick="toggleTheme()">
+  <span id="themeLabel">🌙 Koyu Mod</span>
+  <div class="toggle-switch"></div>
+</div>
+</div>
+
+<main class="content">
+    <header class="topbar">
+        <h1>Aktif Sürücüler Paneli</h1>
+    </header>
+
+    <section class="user-panel">
+        <h3>👤 Tüm Sürücüler</h3>
+        <div class="user-list">
+            <div class="user best">
+              <img src="https://i.pravatar.cc/100?img=12">
+              <div><strong>Ahmet Yılmaz</strong><span>Performans: %98</span><span>Çıkılan Sefer: 120</span></div>
+              <button onclick="openModal(0)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=32">
+              <div><strong>Mehmet Kaya</strong><span>Performans: %92</span><span>Çıkılan Sefer: 105</span></div>
+              <button onclick="openModal(1)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=45">
+              <div><strong>Can Demir</strong><span>Performans: %88</span><span>Çıkılan Sefer: 98</span></div>
+              <button onclick="openModal(2)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=18">
+              <div><strong>Emre Şahin</strong><span>Performans: %85</span><span>Çıkılan Sefer: 90</span></div>
+              <button onclick="openModal(3)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=21">
+              <div><strong>Burak Aydın</strong><span>Performans: %83</span><span>Çıkılan Sefer: 88</span></div>
+              <button onclick="openModal(4)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=27">
+              <div><strong>Onur Kılıç</strong><span>Performans: %80</span><span>Çıkılan Sefer: 85</span></div>
+              <button onclick="openModal(5)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=33">
+              <div><strong>Serkan Yıldız</strong><span>Performans: %78</span><span>Çıkılan Sefer: 82</span></div>
+              <button onclick="openModal(6)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=41">
+              <div><strong>Mert Koç</strong><span>Performans: %76</span><span>Çıkılan Sefer: 80</span></div>
+              <button onclick="openModal(7)">Detay</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="user-panel">
+        <h3 style="margin-top:30px;">👥 Pasif Sürücüler</h3>
+        <div class="user-list">
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=2">
+              <div><strong>Mert Yokuşlu</strong><span>Performans: %83</span><span>Çıkılan Sefer: 88</span></div>
+              <button onclick="openModal(8)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=3">
+              <div><strong>Anıl Ekmekçioğlu</strong><span>Performans: %80</span><span>Çıkılan Sefer: 85</span></div>
+              <button onclick="openModal(9)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=4">
+              <div><strong>Berk Yıldız</strong><span>Performans: %78</span><span>Çıkılan Sefer: 82</span></div>
+              <button onclick="openModal(10)">Detay</button>
+            </div>
+            <div class="user">
+              <img src="https://i.pravatar.cc/100?img=49">
+              <div><strong>Ahmet Koç</strong><span>Performans: %76</span><span>Çıkılan Sefer: 80</span></div>
+              <button onclick="openModal(11)">Detay</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- MODAL -->
+<div class="modal" id="driverModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-header">
+      <img class="modal-avatar" id="mImg" src="">
+      <div><h3 id="mName"></h3><span id="mTitle"></span></div>
+    </div>
+    <div class="modal-section">
+      <label>Özgeçmiş</label>
+      <div class="modal-bio" id="mBio"></div>
+    </div>
+    <div class="modal-section">
+      <label>İstatistikler</label>
+      <div class="modal-stats">
+        <div class="modal-stat"><div class="modal-stat-val" id="mSefer"></div><div class="modal-stat-lbl">Toplam Sefer</div></div>
+        <div class="modal-stat"><div class="modal-stat-val" id="mUyari"></div><div class="modal-stat-lbl">Uyarı</div></div>
+        <div class="modal-stat"><div class="modal-stat-val" id="mDeneyim"></div><div class="modal-stat-lbl">Yıl Deneyim</div></div>
+      </div>
+    </div>
+    <div class="modal-section">
+      <label>Performans — <span id="mPerfVal"></span></label>
+      <div class="perf-bar-bg"><div class="perf-bar-fill" id="mPerfBar"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var drivers = [
+  { ad:"Ahmet Yılmaz",   unvan:"Kıdemli Sürücü",         img:"https://i.pravatar.cc/100?img=12", bio:"Sakarya doğumlu. 12 yıldır sektörde aktif. NEXTECH ekibine 2019'da katıldı. Uzun mesafe ve hassas yük taşıma konusunda uzman.", sefer:120, uyari:8,  deneyim:12, perf:98 },
+  { ad:"Mehmet Kaya",    unvan:"Sürücü",                  img:"https://i.pravatar.cc/100?img=32", bio:"Adapazarı'ndan. 7 yıllık deneyimiyle filonun güvenilir isimlerinden. Özellikle şehiriçi teslimat rotalarında başarılı.", sefer:105, uyari:14, deneyim:7,  perf:92 },
+  { ad:"Can Demir",      unvan:"Sürücü",                  img:"https://i.pravatar.cc/100?img=45", bio:"Serdivan'da ikamet ediyor. 5 yıldır aktif sürücü. Soğuk zincir lojistiği konusunda sertifikalı.", sefer:98,  uyari:19, deneyim:5,  perf:88 },
+  { ad:"Emre Şahin",     unvan:"Sürücü",                  img:"https://i.pravatar.cc/100?img=18", bio:"Hendek kökenli. Hem kara hem de ro-ro taşımacılığı deneyimine sahip. 2021'de NEXTECH'e geçiş yaptı.", sefer:90,  uyari:22, deneyim:6,  perf:85 },
+  { ad:"Burak Aydın",    unvan:"Sürücü",                  img:"https://i.pravatar.cc/100?img=21", bio:"Karasu'da yaşıyor. Ağırlıklı olarak İstanbul–Sakarya hattında görev yapıyor. Son 3 ayda uyarı sayısını yarıya indirdi.", sefer:88,  uyari:25, deneyim:4,  perf:83 },
+  { ad:"Onur Kılıç",     unvan:"Sürücü",                  img:"https://i.pravatar.cc/100?img=27", bio:"Sapanca'dan. Ağır tonajlı araç deneyimi var. Ekip içinde en sakin sürüş stiline sahip sürücüler arasında gösteriliyor.", sefer:85,  uyari:28, deneyim:5,  perf:80 },
+  { ad:"Serkan Yıldız",  unvan:"Sürücü",                  img:"https://i.pravatar.cc/100?img=33", bio:"Arifiye'de ikamet ediyor. Frigorifik araç kullanımı konusunda deneyimli. Performans artışı için koçluk programına dahil edildi.", sefer:82,  uyari:31, deneyim:3,  perf:78 },
+  { ad:"Mert Koç",       unvan:"Sürücü",                  img:"https://i.pravatar.cc/100?img=41", bio:"Geyve'den. Küçük tonajlı dağıtım araçlarında uzman. Müşteri memnuniyeti skorları en yüksek sürücülerden biri.", sefer:80,  uyari:33, deneyim:4,  perf:76 },
+  { ad:"Mert Yokuşlu",   unvan:"Pasif Sürücü",            img:"https://i.pravatar.cc/100?img=2",  bio:"İzinli statüde. Dönüşü Haziran 2026 olarak planlanıyor. 4 yıllık NEXTECH deneyimine sahip.", sefer:88,  uyari:24, deneyim:4,  perf:83 },
+  { ad:"Anıl Ekmekçioğlu",unvan:"Pasif Sürücü",           img:"https://i.pravatar.cc/100?img=3",  bio:"Sağlık raporu nedeniyle geçici olarak pasif statüde. Filoya katkısı yüksek, dönüşü bekleniyor.", sefer:85,  uyari:27, deneyim:5,  perf:80 },
+  { ad:"Berk Yıldız",    unvan:"Pasif Sürücü",            img:"https://i.pravatar.cc/100?img=4",  bio:"Askerlik görevini tamamlayıp dönecek. Önceki dönemde tutarlı performans sergiledi.", sefer:82,  uyari:29, deneyim:3,  perf:78 },
+  { ad:"Ahmet Koç",      unvan:"Pasif Sürücü",            img:"https://i.pravatar.cc/100?img=49", bio:"Eğitim programında. Ağır vasıta sürücü belgesi yenileme sürecinde. Tamamlanınca aktif listeye alınacak.", sefer:80,  uyari:31, deneyim:2,  perf:76 },
+];
+
+function openModal(i) {
+  var d = drivers[i];
+  document.getElementById('mImg').src       = d.img;
+  document.getElementById('mName').innerText = d.ad;
+  document.getElementById('mTitle').innerText = d.unvan;
+  document.getElementById('mBio').innerText  = d.bio;
+  document.getElementById('mSefer').innerText = d.sefer;
+  document.getElementById('mUyari').innerText = d.uyari;
+  document.getElementById('mDeneyim').innerText = d.deneyim;
+  document.getElementById('mPerfVal').innerText = '%' + d.perf;
+  document.getElementById('mPerfBar').style.width = d.perf + '%';
+  document.getElementById('mPerfBar').style.background = d.perf >= 90 ? '#28a745' : d.perf >= 80 ? '#1e90ff' : '#e74c3c';
+  document.getElementById('driverModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('driverModal').classList.remove('open');
+}
+
+document.getElementById('driverModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  }
+})();
+</script>
+</body>
+</html>
