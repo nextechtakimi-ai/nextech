@@ -156,9 +156,72 @@
   wrap.innerHTML = html;
   document.body.appendChild(wrap);
 
-  // ── LOGIC ─────────────────────────────────────────────
+  // ── SABİT CEVAPLAR ────────────────────────────────────
   var TADILAT = '🚧 Merhaba! Ben YOLDAŞ, şu an yoğun bir gelişim sürecindeyim. Mühendislik ekibimiz yapay zeka altyapımı daha güçlü, daha akıllı ve daha hızlı hale getirmek için gece gündüz çalışıyor. Bu süreçte bazı sorularınıza yanıt veremeyebilirim — anlayışınız için teşekkür ederim. Yakında çok daha kapsamlı analizler, gerçek zamanlı filo önerileri ve proaktif uyarılarla karşınızda olacağım. Takipte kalın! 💙';
 
+  var CEVAPLAR = {
+    'Serkan Yıldız hakkında detaylı analiz ver':
+      '⚠️ <strong>Serkan Yıldız — Detaylı Analiz</strong><br><br>' +
+      '📉 Son 7 günlük performans skoru: <strong>%67</strong> (önceki ay ortalaması: %78)<br>' +
+      '🛑 Ani fren olayı: Haftalık ortalama <strong>11.4 kez</strong> (filo ortalaması: 4.9 kez)<br>' +
+      '⏱️ Ortalama tepki süresi normalin <strong>%40 üzerinde</strong><br>' +
+      '📍 En fazla uyarı aldığı hat: <strong>Gebze – Adapazarı</strong> koridoru<br><br>' +
+      '✅ <strong>Öneri:</strong> Bu hafta içinde birebir değerlendirme toplantısı yapılması, gerekirse savunmacı sürüş eğitimine yönlendirilmesi önerilir.',
+
+    'İstanbul Ankara rota optimizasyonu öner':
+      '📍 <strong>İstanbul – Ankara Rota Analizi</strong><br><br>' +
+      '🕐 Mevcut ortalama gecikme: <strong>23 dakika</strong> (son 30 günlük veri)<br>' +
+      '🔴 Kritik tıkanıklık noktası: <strong>Bolu Dağı geçişi</strong> (07:00–09:30 arası)<br>' +
+      '🟡 İkincil sorun: <strong>Gerede kavşağı</strong> (17:00–19:00 arası)<br><br>' +
+      '🗺️ <strong>Önerilen aksiyon:</strong><br>' +
+      '• Çıkış saatini <strong>06:00 veya 09:45 sonrası</strong> olarak ayarlayın<br>' +
+      '• Alternatif güzergah (D-100 yerine O-4 çevre yolu) yakıt tasarrufunda <strong>%8 iyileşme</strong> sağlayabilir<br>' +
+      '• Hafta içi Salı-Çarşamba günleri trafik yoğunluğu en düşük seviyede',
+
+    'Sürücü ödüllendirme sistemi öner':
+      '🏆 <strong>Ahmet Yılmaz — Performans Raporu</strong><br><br>' +
+      '✅ Art arda <strong>8 kusursuz sefer</strong> tamamlandı (sıfır uyarı)<br>' +
+      '📈 Bu ay performans skoru: <strong>%92</strong><br>' +
+      '⛽ Yakıt verimliliği filo ortalamasının <strong>%11 üzerinde</strong><br><br>' +
+      '🎯 <strong>Ödüllendirme Önerileri:</strong><br>' +
+      '• Aylık "En İyi Sürücü" rozeti ve dijital sertifika<br>' +
+      '• Yakıt kartı bonusu veya prim tanımlaması<br>' +
+      '• Yeni sürücülere mentor olarak atanması<br><br>' +
+      '💡 Araştırmalar, tanınma bazlı ödüllendirmenin sürücü motivasyonunu ortalama <strong>%15 artırdığını</strong> göstermektedir.',
+
+    'Sıcaklık uyarısı veren araçları listele':
+      '🌡️ <strong>Sıcaklık Uyarısı — 3 Araç</strong><br><br>' +
+      '🔴 <strong>34 MNO 005</strong> — Dorse sıcaklığı: +9°C (hedef: +2/+4°C) · Sürücü: Emre Şahin<br>' +
+      '🟡 <strong>07 JKL 004</strong> — Dorse sıcaklığı: +7°C (hedef: +2/+4°C) · Sürücü: Ali Özkan<br>' +
+      '🟡 <strong>06 PQR 006</strong> — Dorse sıcaklığı: -16°C (hedef: -18/-20°C) · Sürücü: Burak Aydın<br><br>' +
+      '✅ <strong>Önerilen Aksiyon:</strong><br>' +
+      '• İlk iki araç için soğutma ünitesi acil kontrol edilmeli<br>' +
+      '• Üçüncü araçta termostat kalibrasyonu gerekebilir<br>' +
+      '• İlaç/gıda yükü taşıyorsa teslimat öncesi ürün kontrol protokolü uygulanmalı',
+
+    'Aylık uyarı trendi artan sürücüleri listele':
+      '📊 <strong>Aylık Uyarı Trendi — Artış Tespit Edilen Sürücüler</strong><br><br>' +
+      '🔴 <strong>Kaan Uslu</strong> — Geçen ay: 18 uyarı → Bu ay: 31 uyarı (<strong>+%72</strong>)<br>' +
+      '🔴 <strong>Erdem Keskinci</strong> — Geçen ay: 22 uyarı → Bu ay: 34 uyarı (<strong>+%55</strong>)<br>' +
+      '🟡 <strong>Serkan Yıldız</strong> — Geçen ay: 28 uyarı → Bu ay: 38 uyarı (<strong>+%36</strong>)<br>' +
+      '🟡 <strong>Burak Aydın</strong> — Geçen ay: 19 uyarı → Bu ay: 25 uyarı (<strong>+%32</strong>)<br><br>' +
+      '🔍 <strong>Uyarı Kaynakları (Ortalama):</strong><br>' +
+      '• Ana Cihaz: %61 · Direksiyon Kılıfı: %24 · Dorse Kontrol: %15<br><br>' +
+      '✅ <strong>Öneri:</strong> Kaan Uslu ve Erdem Keskinci için bu ay içinde birebir değerlendirme yapılması, uyarı eşiğini aşan sürücülere ek saha koçluğu planlanması önerilir.',
+
+    'Bakım tarihi yaklaşan araçları listele':
+      '🔧 <strong>Planlı Bakım Takvimi — Kritik 7 Araç</strong><br><br>' +
+      '🔴 <strong>34 ABC 001</strong> · 3 gün · Periyodik bakım · Sürücü: Ahmet Yılmaz<br>' +
+      '🔴 <strong>07 HIJ 012</strong> · 5 gün · Fren sistemi kontrolü · Sürücü: Furkan Öz<br>' +
+      '🟡 <strong>06 DEF 002</strong> · 7 gün · Yağ değişimi · Sürücü: Mehmet Kaya<br>' +
+      '🟡 <strong>34 GHI 003</strong> · 8 gün · Periyodik bakım · Sürücü: Can Demir<br>' +
+      '🟡 <strong>34 STU 007</strong> · 9 gün · Lastik rotasyonu · Sürücü: Onur Kılıç<br>' +
+      '⚪ <strong>06 BCD 010</strong> · 10 gün · Filtre değişimi · Sürücü: Ali Çetin<br>' +
+      '⚪ <strong>34 EFG 011</strong> · 10 gün · Periyodik bakım · Sürücü: Hakan Arslan<br><br>' +
+      '✅ Servis randevularının <strong>bugün alınması</strong> operasyonel aksama riskini sıfıra indirir.'
+  };
+
+  // ── LOGIC ─────────────────────────────────────────────
   function yoldasAc() {
     document.getElementById('yoldasDrawer').classList.add('acik');
     document.getElementById('yoldasOverlay').classList.add('acik');
@@ -180,7 +243,7 @@
     kutu.scrollTop = kutu.scrollHeight;
   }
 
-  function botYazıyor(cevap) {
+  function botCevapla(cevap) {
     var kutu = document.getElementById('yoldasMesajlar');
     var yazDiv = document.createElement('div');
     yazDiv.className = 'mesaj bot';
@@ -195,13 +258,26 @@
     }, 1200);
   }
 
+  function cevapBul(metin) {
+    // birebir eşleşme
+    if (CEVAPLAR[metin]) return CEVAPLAR[metin];
+    // kısmi eşleşme (küçük harf)
+    var kucuk = metin.toLowerCase();
+    for (var anahtar in CEVAPLAR) {
+      if (kucuk.indexOf(anahtar.toLowerCase().split(' ').slice(0,3).join(' ')) !== -1) {
+        return CEVAPLAR[anahtar];
+      }
+    }
+    return TADILAT;
+  }
+
   function yoldasGonder() {
     var input = document.getElementById('yoldasInput');
     var metin = input.value.trim();
     if (!metin) return;
     input.value = '';
     mesajEkle(metin, 'kullanici');
-    botYazıyor(TADILAT);
+    botCevapla(cevapBul(metin));
   }
 
   // event listeners
@@ -213,14 +289,14 @@
     if (e.key === 'Enter') yoldasGonder();
   });
 
-  // global erişim (kartlardan çağrı için)
+  // global erişim
   window.yoldasAc = yoldasAc;
   window.yoldasKapat = yoldasKapat;
   window.yoldasAcMesajla = function(mesaj) {
     yoldasAc();
     setTimeout(function() {
       mesajEkle(mesaj, 'kullanici');
-      botYazıyor(TADILAT);
+      botCevapla(cevapBul(mesaj));
     }, 350);
   };
 })();
