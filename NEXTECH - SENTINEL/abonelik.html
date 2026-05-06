@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>NEXTECH Sentinel | Abonelik</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/panel.css">
+  <style>
+    .abonelik-wrap { padding: 32px; }
+    .abonelik-wrap h2 { font-size: 16px; font-weight: 700; color: #f0f2f5; margin-bottom: 4px; }
+    .abonelik-wrap .subtitle { font-size: 13px; color: #6b7280; margin-bottom: 28px; }
+
+    .paket-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .paket-card {
+      background: #1c1f27;
+      border: 1px solid #2a2d35;
+      border-radius: 16px;
+      padding: 26px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .paket-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.35); transform: translateY(-3px); border-color: #3b4155; }
+    .paket-card.mevcut { border-color: #2563eb; box-shadow: 0 0 0 1px #2563eb, 0 8px 28px rgba(37,99,235,0.18); }
+
+    .mevcut-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: #2563eb; color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 14px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.3px;
+    }
+
+    .paket-ikon { font-size: 26px; margin-bottom: 12px; }
+    .paket-adi { font-size: 16px; font-weight: 700; color: #f0f2f5; margin-bottom: 4px; }
+    .paket-hedef { font-size: 12px; color: #6b7280; margin-bottom: 16px; line-height: 1.5; }
+    .paket-fiyat { font-size: 28px; font-weight: 700; color: #60a5fa; margin-bottom: 4px; letter-spacing: -0.5px; }
+    .paket-fiyat span { font-size: 13px; font-weight: 500; color: #6b7280; }
+    .paket-kdv { font-size: 11px; color: #6b7280; margin-bottom: 18px; }
+    .paket-divider { height: 1px; background: #2a2d35; margin-bottom: 16px; }
+
+    .paket-ozellikler {
+      list-style: none; display: flex; flex-direction: column;
+      gap: 9px; flex: 1; margin-bottom: 22px;
+    }
+    .paket-ozellikler li { font-size: 13px; color: #9ca3b0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .paket-ozellikler li .ic { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+    .paket-ozellikler li.disabled { color: #3b4155; }
+
+    .paket-btn {
+      width: 100%; padding: 11px; border-radius: 10px; font-size: 13px;
+      font-weight: 700; cursor: pointer; border: none; transition: background 0.15s, transform 0.12s;
+    }
+    .paket-btn.aktif { background: #2563eb; color: #fff; }
+    .paket-btn.aktif:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .paket-btn.mevcut-btn { background: #22262f; color: #60a5fa; border: 1px solid #2563eb; cursor: default; }
+    .paket-btn.sepette-btn { background: #22262f; color: #f87171; border: 1px solid #f87171; cursor: pointer; }
+    .paket-btn.sepette-btn:hover { background: #2d1a1a; transform: translateY(-1px); }
+
+    /* ── EK PAKETLER ─────────────────────────────────── */
+    .ek-paket-section { margin-top: 48px; }
+    .ek-paket-section h2 { font-size: 16px; font-weight: 700; color: #f0f2f5; margin-bottom: 4px; }
+    .ek-paket-section .subtitle { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+
+    .ek-paket-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .ek-paket-card {
+      background: #1c1f27; border: 1px solid #2a2d35; border-radius: 16px;
+      padding: 26px 24px; display: flex; flex-direction: column;
+      position: relative; transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .ek-paket-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.35); transform: translateY(-3px); border-color: #3b4155; }
+    .ek-paket-card.dahil { border-color: #059669; box-shadow: 0 0 0 1px #059669, 0 8px 28px rgba(5,150,105,0.15); }
+
+    .dahil-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: #059669; color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 14px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.3px;
+    }
+
+    .ek-paket-card .paket-ikon { font-size: 26px; margin-bottom: 12px; }
+    .ek-paket-card .paket-adi { font-size: 16px; font-weight: 700; color: #f0f2f5; margin-bottom: 4px; }
+    .ek-paket-card .paket-hedef { font-size: 12px; color: #6b7280; margin-bottom: 16px; line-height: 1.5; }
+    .ek-paket-card .paket-fiyat { font-size: 28px; font-weight: 700; color: #34d399; margin-bottom: 4px; letter-spacing: -0.5px; }
+    .ek-paket-card .paket-fiyat span { font-size: 13px; font-weight: 500; color: #6b7280; }
+    .ek-paket-card .paket-kdv { font-size: 11px; color: #6b7280; margin-bottom: 18px; }
+    .ek-paket-card .paket-divider { height: 1px; background: #2a2d35; margin-bottom: 16px; }
+    .ek-paket-card .paket-ozellikler { list-style: none; display: flex; flex-direction: column; gap: 9px; flex: 1; margin-bottom: 22px; }
+    .ek-paket-card .paket-ozellikler li { font-size: 13px; color: #9ca3b0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .ek-paket-card .paket-ozellikler li .ic { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+
+    .ek-paket-btn {
+      width: 100%; padding: 11px; border-radius: 10px; font-size: 13px;
+      font-weight: 700; cursor: pointer; border: none;
+      transition: background 0.15s, transform 0.12s;
+      background: #059669; color: #fff;
+    }
+    .ek-paket-btn:hover { background: #047857; transform: translateY(-1px); }
+    .ek-paket-btn.sepette-btn { background: #2d1a1a; color: #f87171; border: 1px solid #f87171; cursor: pointer; }
+    .ek-paket-btn.sepette-btn:hover { background: #3a1f1f; transform: translateY(-1px); }
+
+    /* ── SEPET İKONU ─────────────────────────────────── */
+    .sepet-icon-wrap {
+      position: relative; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 10px;
+      background: #1c1f27; border: 1px solid #2a2d35;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .sepet-icon-wrap:hover { border-color: #3b4155; background: #22262f; }
+    .sepet-icon-wrap svg { width: 18px; height: 18px; fill: none; stroke: #9ca3b0; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .sepet-icon-wrap .sepet-label { font-size: 13px; color: #9ca3b0; font-weight: 600; }
+    .sepet-badge {
+      position: absolute; top: -6px; right: -6px;
+      background: #2563eb; color: #fff; font-size: 10px; font-weight: 700;
+      width: 18px; height: 18px; border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
+    }
+
+    /* ── SEPET DRAWER ────────────────────────────────── */
+    .sepet-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .sepet-overlay.acik { opacity: 1; pointer-events: all; }
+
+    .sepet-drawer {
+      position: fixed; top: 0; right: 0;
+      width: 360px; height: 100vh;
+      background: #13151c; border-left: 1px solid #2a2d35;
+      z-index: 901; display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: -8px 0 32px rgba(0,0,0,0.4);
+    }
+    .sepet-drawer.acik { transform: translateX(0); }
+
+    .sepet-header {
+      padding: 22px 24px 18px; border-bottom: 1px solid #2a2d35;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .sepet-header h3 { font-size: 15px; font-weight: 700; color: #f0f2f5; }
+    .sepet-kapat {
+      width: 32px; height: 32px; border-radius: 8px; border: none;
+      background: #22262f; color: #9ca3b0; cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .sepet-kapat:hover { background: #2a2d35; color: #f0f2f5; }
+
+    .sepet-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+    .sepet-bos {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; height: 100%;
+      color: #4b5563; font-size: 13px; text-align: center; gap: 10px;
+    }
+    .sepet-bos .bos-ikon { font-size: 40px; opacity: 0.5; }
+
+    .sepet-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid #2a2d35;
+    }
+    .sepet-item:last-child { border-bottom: none; }
+    .sepet-item-ikon {
+      font-size: 22px; flex-shrink: 0; width: 40px; height: 40px;
+      background: #1c1f27; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sepet-item-bilgi { flex: 1; }
+    .sepet-item-adi { font-size: 13px; font-weight: 600; color: #f0f2f5; margin-bottom: 2px; }
+    .sepet-item-fiyat { font-size: 12px; color: #60a5fa; font-weight: 600; }
+    .sepet-item-sil {
+      width: 28px; height: 28px; border: none; background: #22262f;
+      border-radius: 7px; color: #6b7280; cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sepet-item-sil:hover { background: #3d1a1a; color: #f87171; }
+
+    .sepet-footer { padding: 20px 24px; border-top: 1px solid #2a2d35; }
+    .sepet-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .sepet-total-label { font-size: 12px; color: #6b7280; }
+    .sepet-total-fiyat { font-size: 22px; font-weight: 700; color: #f0f2f5; letter-spacing: -0.5px; }
+    .sepet-total-kdv { font-size: 11px; color: #6b7280; margin-bottom: 18px; }
+
+    .basvur-btn {
+      width: 100%; padding: 13px; border-radius: 11px;
+      background: #2563eb; color: #fff;
+      font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+      transition: background 0.15s, transform 0.12s; letter-spacing: 0.2px;
+    }
+    .basvur-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .basvur-btn:disabled { background: #1e2433; color: #4b5563; cursor: default; transform: none; }
+
+    /* ── BAŞARI MODALI ───────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.acik { opacity: 1; pointer-events: all; }
+
+    .modal-kart {
+      background: #1c1f27; border: 1px solid #2a2d35; border-radius: 20px;
+      padding: 40px 36px; width: 360px; text-align: center;
+      transform: scale(0.92) translateY(16px);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+    .modal-overlay.acik .modal-kart { transform: scale(1) translateY(0); }
+
+    .modal-check {
+      width: 64px; height: 64px; background: rgba(5,150,105,0.15);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 28px;
+    }
+    .modal-baslik { font-size: 17px; font-weight: 700; color: #f0f2f5; margin-bottom: 10px; }
+    .modal-aciklama { font-size: 13px; color: #6b7280; line-height: 1.6; margin-bottom: 28px; }
+    .modal-kapat-btn {
+      padding: 11px 32px; border-radius: 10px; border: none;
+      background: #2563eb; color: #fff; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .modal-kapat-btn:hover { background: #1d4ed8; }
+
+    /* ── LIGHT MODE ──────────────────────────────────── */
+    body.light .abonelik-wrap h2  { color: #111318; }
+    body.light .paket-card        { background: #fff; border-color: #e2e6ef; }
+    body.light .paket-card.mevcut { border-color: #2563eb; box-shadow: 0 0 0 1px #2563eb, 0 8px 28px rgba(37,99,235,0.12); }
+    body.light .paket-adi         { color: #111318; }
+    body.light .paket-divider     { background: #e2e6ef; }
+    body.light .paket-ozellikler li { color: #4b5563; }
+    body.light .paket-ozellikler li.disabled { color: #d1d5db; }
+    body.light .paket-btn.mevcut-btn { background: #eff6ff; }
+    body.light .ek-paket-section h2 { color: #111318; }
+    body.light .ek-paket-card       { background: #fff; border-color: #e2e6ef; }
+    body.light .ek-paket-card.dahil { border-color: #059669; box-shadow: 0 0 0 1px #059669, 0 8px 28px rgba(5,150,105,0.10); }
+    body.light .ek-paket-card .paket-adi { color: #111318; }
+    body.light .ek-paket-card .paket-divider { background: #e2e6ef; }
+    body.light .ek-paket-card .paket-ozellikler li { color: #4b5563; }
+    body.light .sepet-icon-wrap { background: #fff; border-color: #e2e6ef; }
+    body.light .sepet-drawer { background: #f9fafb; border-left-color: #e2e6ef; }
+    body.light .sepet-header { border-bottom-color: #e2e6ef; }
+    body.light .sepet-header h3 { color: #111318; }
+    body.light .sepet-kapat { background: #f3f4f6; color: #6b7280; }
+    body.light .sepet-item { border-bottom-color: #e2e6ef; }
+    body.light .sepet-item-ikon { background: #fff; }
+    body.light .sepet-item-adi { color: #111318; }
+    body.light .sepet-item-sil { background: #f3f4f6; }
+    body.light .sepet-footer { border-top-color: #e2e6ef; }
+    body.light .sepet-total-fiyat { color: #111318; }
+    body.light .modal-kart { background: #fff; border-color: #e2e6ef; }
+    body.light .modal-baslik { color: #111318; }
+  </style>
+</head>
+<body>
+
+<!-- SEPET OVERLAY -->
+<div class="sepet-overlay" id="sepetOverlay" onclick="sepetKapat()"></div>
+
+<!-- SEPET DRAWER -->
+<div class="sepet-drawer" id="sepetDrawer">
+  <div class="sepet-header">
+    <h3>🛒 Sepetim</h3>
+    <button class="sepet-kapat" onclick="sepetKapat()">✕</button>
+  </div>
+  <div class="sepet-body" id="sepetBody">
+    <div class="sepet-bos" id="sepetBos">
+      <div class="bos-ikon">🛒</div>
+      <div>Sepetiniz boş.<br>Bir paket ekleyerek başlayın.</div>
+    </div>
+    <div id="sepetListesi"></div>
+  </div>
+  <div class="sepet-footer">
+    <div class="sepet-total-row">
+      <span class="sepet-total-label">Toplam Tutar</span>
+      <span class="sepet-total-fiyat" id="sepetTotal">0,00 €</span>
+    </div>
+    <div class="sepet-total-kdv">KDV dahil tüm tutarlar</div>
+    <button class="basvur-btn" id="basvurBtn" onclick="basvur()" disabled>Başvur</button>
+  </div>
+</div>
+
+<!-- BAŞARI MODALI -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-kart">
+    <div class="modal-check">✅</div>
+    <div class="modal-baslik">Talebiniz Alındı!</div>
+    <div class="modal-aciklama">Müşteri temsilcimiz en kısa sürede sizinle iletişime geçecektir.</div>
+    <button class="modal-kapat-btn" onclick="modalKapat()">Tamam</button>
+  </div>
+</div>
+
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+  <div style="display:none;font-size:15px;font-weight:700;color:#60a5fa;padding:0 8px;margin-bottom:28px;">NEXTECH</div>
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="drivers.html">Sürücüler</a></li>
+    <li><a href="vehicles.html">Araçlar</a></li>
+    <li><a href="reports.html">Raporlar</a></li>
+    <li><a href="harita.html">Harita / Rota</a></li>
+    <li><a href="karsilastirma.html">Karşılaştırma</a></li>
+    <li><a href="destek.html">Destek Talebi</a></li>
+    <li class="active"><a href="abonelik.html">Abonelik</a></li>
+  </ul>
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <span id="themeLabel">🌙 Koyu Mod</span>
+    <div class="toggle-switch"></div>
+  </div>
+</div>
+
+<main class="content">
+  <header class="topbar">
+    <h1>Abonelik Planları</h1>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span style="font-size:12px;color:#6b7280;">Mevcut paketiniz: <strong style="color:#60a5fa;">Fleet Max</strong></span>
+      <div class="sepet-icon-wrap" onclick="sepetAc()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span class="sepet-label">Sepet</span>
+        <span class="sepet-badge" id="sepetBadge">0</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="abonelik-wrap">
+    <h2>Paket Seçin</h2>
+    <p class="subtitle">Tüm paketler KDV dahil fiyatlandırılmıştır. İhtiyacınıza en uygun planı seçin.</p>
+
+    <div class="paket-grid">
+
+      <!-- BİREYSEL -->
+      <div class="paket-card">
+        <div class="paket-ikon">👤</div>
+        <div class="paket-adi">Bireysel Paket</div>
+        <div class="paket-hedef">Tek kullanıcılar ve bağımsız sürücüler için giriş seviyesi.</div>
+        <div class="paket-fiyat">19,99 € <span>/ ay</span></div>
+        <div class="paket-kdv">KDV dahil</div>
+        <div class="paket-divider"></div>
+        <ul class="paket-ozellikler">
+          <li><span class="ic">✅</span> Ana Cihaz</li>
+          <li><span class="ic">✅</span> Akıllı Direksiyon Kılıfı</li>
+          <li><span class="ic">✅</span> Anlık davranış takibi ve geri bildirim</li>
+          <li class="disabled"><span class="ic">✖</span> Aylık Raporlama Sistemi dahil değil</li>
+          <li class="disabled"><span class="ic">✖</span> Yönetim Paneli yok</li>
+        </ul>
+        <button class="paket-btn aktif" id="btn-bireysel"
+          onclick="sepeteEkle('bireysel','Bireysel Paket','👤',19.99,'/ ay',this,false)">
+          🛒 Sepete Ekle
+        </button>
+      </div>
+
+      <!-- EXPRESS -->
+      <div class="paket-card">
+        <div class="paket-ikon">🚚</div>
+        <div class="paket-adi">Express Paketi</div>
+        <div class="paket-hedef">10–250 araçlık filolar için kurumsal başlangıç seviyesi.</div>
+        <div class="paket-fiyat">99,99 €<span>/ ay</span></div>
+        <div class="paket-kdv">KDV dahil</div>
+        <div class="paket-divider"></div>
+        <ul class="paket-ozellikler">
+          <li><span class="ic">✅</span> Ana Cihaz + Direksiyon Kılıfı</li>
+          <li><span class="ic">✅</span> Aylık Sürücü Raporu</li>
+          <li><span class="ic">✅</span> Yönetim Sistemi</li>
+          <li><span class="ic">✅</span> Tek merkezde sürücü verileri</li>
+          <li><span class="ic">✅</span> Yöneticilere karar desteği</li>
+        </ul>
+        <button class="paket-btn aktif" id="btn-express"
+          onclick="sepeteEkle('express','Express Paketi','🚚',99.99,'/ ay',this,false)">
+          🛒 Sepete Ekle
+        </button>
+      </div>
+
+      <!-- TRANSIT PRO -->
+      <div class="paket-card">
+        <div class="paket-ikon">📦</div>
+        <div class="paket-adi">Transit Pro Paketi</div>
+        <div class="paket-hedef">250–1000 araçlık orta/büyük ölçekli filolar için ileri seviye çözüm.</div>
+        <div class="paket-fiyat">59,99 €<span>/ ay</span></div>
+        <div class="paket-kdv">KDV dahil</div>
+        <div class="paket-divider"></div>
+        <ul class="paket-ozellikler">
+          <li><span class="ic">✅</span> Express'teki her şey</li>
+          <li><span class="ic">✅</span> Gelişmiş veri analizi</li>
+          <li><span class="ic">✅</span> Karşılaştırmalı performans analizi</li>
+          <li><span class="ic">✅</span> Operasyonel verimlilik araçları</li>
+          <li><span class="ic">✅</span> Öncelikli destek</li>
+        </ul>
+        <button class="paket-btn aktif" id="btn-transitpro"
+          onclick="sepeteEkle('transitpro','Transit Pro Paketi','📦',59.99,'/ ay',this,false)">
+          🛒 Sepete Ekle
+        </button>
+      </div>
+
+      <!-- FLEET MAX — MEVCUT -->
+      <div class="paket-card mevcut">
+        <div class="mevcut-badge">✦ Mevcut Paketiniz</div>
+        <div class="paket-ikon">🌍</div>
+        <div class="paket-adi">Fleet Max Paketi</div>
+        <div class="paket-hedef">1000+ araçlı uluslararası ölçekli büyük lojistik firmaları için en kapsamlı çözüm.</div>
+        <div class="paket-fiyat">49,99 €<span>/ ay</span></div>
+        <div class="paket-kdv">KDV dahil</div>
+        <div class="paket-divider"></div>
+        <ul class="paket-ozellikler">
+          <li><span class="ic">✅</span> Transit Pro'nun tüm özellikleri</li>
+          <li><span class="ic">✅</span> Geniş veri işleme kapasitesi</li>
+          <li><span class="ic">✅</span> Gelişmiş filo analitiği</li>
+          <li><span class="ic">✅</span> Çoklu operasyon bölgelerinde merkezi yönetim</li>
+          <li><span class="ic">✅</span> Global altyapı desteği</li>
+        </ul>
+        <button class="paket-btn mevcut-btn">✦ Bu pakete abonesiniz</button>
+      </div>
+
+    </div>
+
+    <!-- ── EK PAKETLER ─────────────────────────────────── -->
+    <div class="ek-paket-section">
+      <h2>Ek Paketler</h2>
+      <p class="subtitle">Mevcut aboneliğinize ekleyebileceğiniz modüler ek paketler. Tüm paketlerle uyumlu çalışır.</p>
+
+      <div class="ek-paket-grid">
+
+        <!-- FROST -->
+        <div class="ek-paket-card dahil">
+          <div class="dahil-badge">✦ Dahil</div>
+          <div class="paket-ikon">🧊</div>
+          <div class="paket-adi">Frost Ek Paketi</div>
+          <div class="paket-hedef">Soğuk zincir lojistiği yapan firmalar için geliştirilmiş sıcaklık kontrol modülü.</div>
+          <div class="paket-fiyat">29,99 € <span>/ ay</span></div>
+          <div class="paket-kdv">KDV dahil</div>
+          <div class="paket-divider"></div>
+          <ul class="paket-ozellikler">
+            <li><span class="ic">✅</span> Dorse Sıcaklık Kontrolü Cihazı</li>
+            <li><span class="ic">✅</span> Araç içi anlık sıcaklık izleme</li>
+            <li><span class="ic">✅</span> Aralık dışı otomatik uyarı sistemi</li>
+            <li><span class="ic">✅</span> Filo yönetim sistemi entegrasyonu</li>
+            <li><span class="ic">✅</span> Tüm abonelik paketleriyle uyumlu</li>
+          </ul>
+          <button class="ek-paket-btn" id="btn-frost"
+            onclick="sepeteEkle('frost','Frost Ek Paketi','🧊',29.99,'/ ay',this,true)">
+            🛒 Sepete Ekle
+          </button>
+        </div>
+
+        <!-- YOLDAŞ -->
+        <div class="ek-paket-card dahil">
+          <div class="dahil-badge">✦ Dahil</div>
+          <div class="paket-ikon">🤖</div>
+          <div class="paket-adi">YOLDAŞ Ek Paketi</div>
+          <div class="paket-hedef">Yapay zeka tabanlı karar destek ve analiz asistanı. Filo yönetimini proaktif hale getirir.</div>
+          <div class="paket-fiyat">19,99 € <span>/ ay</span></div>
+          <div class="paket-kdv">KDV dahil</div>
+          <div class="paket-divider"></div>
+          <ul class="paket-ozellikler">
+            <li><span class="ic">✅</span> Yapay zeka destekli veri analizi</li>
+            <li><span class="ic">✅</span> Doğrudan aksiyon önerileri</li>
+            <li><span class="ic">✅</span> 7/24 aktif yapay zeka danışmanlığı</li>
+            <li><span class="ic">✅</span> Anlık soru-cevap desteği</li>
+            <li><span class="ic">✅</span> Tüm paketlerle entegre çalışır</li>
+          </ul>
+          <button class="ek-paket-btn" id="btn-yoldas"
+            onclick="sepeteEkle('yoldas','YOLDAŞ Ek Paketi','🤖',19.99,'/ ay',this,true)">
+            🛒 Sepete Ekle
+          </button>
+        </div>
+
+        <!-- SENTINEL VTN -->
+        <div class="ek-paket-card">
+          <div class="paket-ikon">📡</div>
+          <div class="paket-adi">Sentinel VTN Paketi</div>
+          <div class="paket-hedef">LoRaWAN tabanlı Veri Toplama Noktası. Araçların merkeze dönüşünde veriyi otomatik buluta aktarır.</div>
+          <div class="paket-fiyat">299,99 € <span>/ tek seferlik</span></div>
+          <div class="paket-kdv">KDV dahil · Tek seferlik kurulum</div>
+          <div class="paket-divider"></div>
+          <ul class="paket-ozellikler">
+            <li><span class="ic">✅</span> 1 adet LoRaWAN tabanlı VTN donanımı</li>
+            <li><span class="ic">✅</span> Profesyonel kurulum hizmeti dahil</li>
+            <li><span class="ic">✅</span> BAYKIŞ ile otomatik veri senkronizasyonu</li>
+            <li><span class="ic">✅</span> Ek müdahale gerektirmez</li>
+            <li><span class="ic">✅</span> Tüm SENTINEL paketleriyle uyumlu</li>
+          </ul>
+          <button class="ek-paket-btn" id="btn-vtn"
+            onclick="sepeteEkle('vtn','Sentinel VTN Paketi','📡',299.99,'/ tek seferlik',this,true)">
+            🛒 Sepete Ekle
+          </button>
+        </div>
+
+      </div>
+    </div>
+    <!-- ── /EK PAKETLER ───────────────────────────────── -->
+
+  </div>
+</main>
+
+<script>
+  var sepet = {};
+
+  function fiyatFormat(val) {
+    return val.toFixed(2).replace('.', ',') + ' €';
+  }
+
+  function sepeteEkle(id, ad, ikon, fiyat, birim, btn, isEk) {
+    if (sepet[id]) {
+      delete sepet[id];
+      if (isEk) {
+        btn.className = 'ek-paket-btn';
+        btn.textContent = '🛒 Sepete Ekle';
+      } else {
+        btn.className = 'paket-btn aktif';
+        btn.textContent = '🛒 Sepete Ekle';
+      }
+    } else {
+      sepet[id] = { id: id, ad: ad, ikon: ikon, fiyat: fiyat, birim: birim, isEk: isEk };
+      if (isEk) {
+        btn.className = 'ek-paket-btn sepette-btn';
+        btn.textContent = '✕ Sepetten Çıkar';
+      } else {
+        btn.className = 'paket-btn sepette-btn';
+        btn.textContent = '✕ Sepetten Çıkar';
+      }
+    }
+    sepetGuncelle();
+  }
+
+  function sepetSil(id) {
+    if (!sepet[id]) return;
+    var isEk = sepet[id].isEk;
+    var btn = document.getElementById('btn-' + id);
+    if (btn) {
+      if (isEk) {
+        btn.className = 'ek-paket-btn';
+        btn.textContent = '🛒 Sepete Ekle';
+      } else {
+        btn.className = 'paket-btn aktif';
+        btn.textContent = '🛒 Sepete Ekle';
+      }
+    }
+    delete sepet[id];
+    sepetGuncelle();
+  }
+
+  function sepetGuncelle() {
+    var keys = Object.keys(sepet);
+    var badge = document.getElementById('sepetBadge');
+    var listesi = document.getElementById('sepetListesi');
+    var bos = document.getElementById('sepetBos');
+    var basvurBtn = document.getElementById('basvurBtn');
+    var totalEl = document.getElementById('sepetTotal');
+
+    if (keys.length > 0) {
+      badge.style.display = 'flex';
+      badge.textContent = keys.length;
+    } else {
+      badge.style.display = 'none';
+    }
+
+    bos.style.display = keys.length === 0 ? 'flex' : 'none';
+    basvurBtn.disabled = keys.length === 0;
+
+    listesi.innerHTML = '';
+    var total = 0;
+    keys.forEach(function(k) {
+      var item = sepet[k];
+      total += item.fiyat;
+      var div = document.createElement('div');
+      div.className = 'sepet-item';
+      div.innerHTML =
+        '<div class="sepet-item-ikon">' + item.ikon + '</div>' +
+        '<div class="sepet-item-bilgi">' +
+          '<div class="sepet-item-adi">' + item.ad + '</div>' +
+          '<div class="sepet-item-fiyat">' + fiyatFormat(item.fiyat) +
+            ' <span style="color:#6b7280;font-weight:400;">' + item.birim + '</span></div>' +
+        '</div>' +
+        '<button class="sepet-item-sil" onclick="sepetSil(\'' + k + '\')">✕</button>';
+      listesi.appendChild(div);
+    });
+
+    totalEl.textContent = fiyatFormat(total);
+  }
+
+  function sepetAc() {
+    document.getElementById('sepetDrawer').classList.add('acik');
+    document.getElementById('sepetOverlay').classList.add('acik');
+  }
+
+  function sepetKapat() {
+    document.getElementById('sepetDrawer').classList.remove('acik');
+    document.getElementById('sepetOverlay').classList.remove('acik');
+  }
+
+  function basvur() {
+    sepetKapat();
+    setTimeout(function() {
+      document.getElementById('modalOverlay').classList.add('acik');
+    }, 220);
+  }
+
+  function modalKapat() {
+    document.getElementById('modalOverlay').classList.remove('acik');
+    var keys = Object.keys(sepet);
+    keys.forEach(function(k) { sepetSil(k); });
+  }
+
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+    var isLight = document.body.classList.contains('light');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+  }
+  (function() {
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -322,6 +322,55 @@
     .driver-card { animation: fadeUp 0.4s ease both; }
     #card1 .driver-card { animation-delay: 0.05s; }
     #card2 .driver-card { animation-delay: 0.15s; }
+
+    /* ── AI KARŞILAŞTIRMA KUTUSU ── */
+    .ai-compare-box {
+      margin: 0 32px 32px;
+      border: 1.5px solid #7c3aed;
+      border-radius: 14px;
+      padding: 24px 28px;
+      background: #1a1625;
+    }
+    .ai-compare-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .ai-compare-title  { font-size: 15px; font-weight: 700; color: #a78bfa; }
+    .ai-compare-desc   { font-size: 12px; color: #6b7280; margin-bottom: 16px; }
+    .ai-compare-btn {
+      background: #7c3aed; color: white; border: none;
+      padding: 10px 22px; border-radius: 9px; font-size: 13px;
+      font-weight: 600; cursor: pointer; transition: background 0.15s;
+    }
+    .ai-compare-btn:hover { background: #6d28d9; }
+    .ai-compare-result {
+      margin-top: 16px; padding: 16px 18px;
+      background: #1e1630; border-radius: 10px;
+      border-left: 3px solid #7c3aed;
+      font-size: 13px; color: #c4b5fd;
+      display: none; line-height: 1.85;
+    }
+
+    /* light mod uyumu */
+    body.light .ai-compare-box    { background: #faf5ff; }
+    body.light .ai-compare-title  { color: #6d28d9; }
+    body.light .ai-compare-desc   { color: #6b7280; }
+    body.light .ai-compare-result { background: #ede9fe; color: #4c1d95; }
+    body.light .compare-header select { background: #f4f6fb; border-color: #e2e6ef; color: #111318; }
+    body.light .driver-card        { background: #fff; border-color: #e2e6ef; }
+    body.light .driver-card-header { background: #f4f6fb; border-color: #e2e6ef; }
+    body.light .driver-card-header .info strong { color: #111318; }
+    body.light .online-dot  { border-color: #f4f6fb; }
+    body.light .vs-circle   { background: #fff; border-color: #e2e6ef; color: #9ca3af; }
+    body.light .vs-line     { background: linear-gradient(to bottom, transparent, #e2e6ef 30%, #e2e6ef 70%, transparent); }
+    body.light .ring-bg     { stroke: #f0f2f5; }
+    body.light .ring-val    { color: #111318; }
+    body.light .ring-info-title { color: #111318; }
+    body.light .stat-val    { color: #111318; }
+    body.light .stat-bar-bg { background: #e8eaed; }
+    body.light .card-divider { background: #e8eaed; }
+    body.light .num-box     { background: #f4f6fb; border-color: #e2e6ef; }
+    body.light .num-box-val { color: #111318; }
+    body.light .num-box.highlight .num-box-val { color: #2563eb; }
+    body.light .num-box.danger    .num-box-val { color: #dc2626; }
+    body.light .num-box.success   .num-box-val { color: #16a34a; }
   </style>
 </head>
 <body>
@@ -336,11 +385,13 @@
     <li><a href="reports.html">Raporlar</a></li>
     <li><a href="harita.html">Harita / Rota</a></li>
     <li class="active"><a href="karsilastirma.html">Karşılaştırma</a></li>
+<li><a href="destek.html">Destek Talebi</a></li>
+<li><a href="abonelik.html">Abonelik</a></li>
   </ul>
-<div class="theme-toggle" onclick="toggleTheme()">
-  <span id="themeLabel">🌙 Koyu Mod</span>
-  <div class="toggle-switch"></div>
-</div>
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <span id="themeLabel">🌙 Koyu Mod</span>
+    <div class="toggle-switch"></div>
+  </div>
 </div>
 
 <main class="content">
@@ -384,6 +435,18 @@
     </div>
     <div id="card2"></div>
   </div>
+
+  <!-- ✦ YENİ: AI ANALİZ KUTUSU -->
+  <div class="ai-compare-box" id="aiBox" style="display:none">
+    <div class="ai-compare-header">
+      <span class="ai-compare-title">✦ Yapay Zeka Destekli Karşılaştırma Analizi</span>
+      <span class="beta-badge">BETA</span>
+    </div>
+    <p class="ai-compare-desc">Seçili iki sürücünün verilerini analiz ederek güçlü/zayıf yönleri karşılaştırır ve öneri sunar.</p>
+    <button class="ai-compare-btn" onclick="runAI()">Analizi Başlat</button>
+    <div class="ai-compare-result" id="aiResult"></div>
+  </div>
+
 </main>
 
 <script>
@@ -407,117 +470,87 @@ function barColor(v) {
   if (v >= 70) return '#60a5fa';
   return '#f87171';
 }
-
 function ringColor(v) {
   if (v >= 85) return '#4ade80';
   if (v >= 70) return '#60a5fa';
   return '#f87171';
 }
-
 function makeRing(val) {
-  var r = 34;
-  var circ = 2 * Math.PI * r;
-  var dash = (val / 100) * circ;
-  var color = ringColor(val);
+  var r=34, circ=2*Math.PI*r, dash=(val/100)*circ, color=ringColor(val);
   return '<div class="ring-container">' +
     '<svg viewBox="0 0 80 80" width="80" height="80">' +
-      '<circle class="ring-bg" cx="40" cy="40" r="' + r + '"/>' +
-      '<circle class="ring-fill" cx="40" cy="40" r="' + r + '"' +
-        ' stroke="' + color + '"' +
-        ' stroke-dasharray="' + circ + '"' +
-        ' stroke-dashoffset="' + (circ - dash) + '"' +
-      '/>' +
+      '<circle class="ring-bg" cx="40" cy="40" r="'+r+'"/>' +
+      '<circle class="ring-fill" cx="40" cy="40" r="'+r+'" stroke="'+color+'" stroke-dasharray="'+circ+'" stroke-dashoffset="'+(circ-dash)+'"/>' +
     '</svg>' +
-    '<div class="ring-label">' +
-      '<span class="ring-val">%' + val + '</span>' +
-      '<span class="ring-sub">Puan</span>' +
-    '</div>' +
+    '<div class="ring-label"><span class="ring-val">%'+val+'</span><span class="ring-sub">Puan</span></div>' +
   '</div>';
 }
-
 function makeCard(d, isWinner) {
   return '<div class="driver-card">' +
-
     '<div class="driver-card-header">' +
-      '<div class="driver-avatar-wrap">' +
-        '<img class="driver-avatar" src="' + d.img + '">' +
-        '<div class="online-dot"></div>' +
-      '</div>' +
-      '<div class="info">' +
-        '<strong>' + d.ad + '</strong>' +
-        '<span>' + d.unvan + '</span>' +
-        (isWinner ? '<div class="winner-badge">ÖNDE</div>' : '') +
-      '</div>' +
+      '<div class="driver-avatar-wrap"><img class="driver-avatar" src="'+d.img+'"><div class="online-dot"></div></div>' +
+      '<div class="info"><strong>'+d.ad+'</strong><span>'+d.unvan+'</span>'+(isWinner?'<div class="winner-badge">ÖNDE</div>':'')+'</div>' +
     '</div>' +
-
-    '<div class="score-ring-wrap">' +
-      makeRing(d.puan) +
-      '<div class="ring-info">' +
-        '<div class="ring-info-title">Genel Performans</div>' +
-        '<div class="ring-info-sub">' + d.sefer + ' toplam sefer</div>' +
-      '</div>' +
-    '</div>' +
-
-    '<div class="driver-stats">' +
-      statRow('Performans', d.perf) +
-      statRow('Güvenli Sürüş', d.guven) +
-      statRow('Tutarlılık', d.tutarlilik) +
-    '</div>' +
-
+    '<div class="score-ring-wrap">'+makeRing(d.puan)+'<div class="ring-info"><div class="ring-info-title">Genel Performans</div><div class="ring-info-sub">'+d.sefer+' toplam sefer</div></div></div>' +
+    '<div class="driver-stats">'+statRow('Performans',d.perf)+statRow('Güvenli Sürüş',d.guven)+statRow('Tutarlılık',d.tutarlilik)+'</div>' +
     '<div class="card-divider"></div>' +
-
-    '<div class="stat-numbers">' +
-      numBox(d.sefer,   'Toplam Sefer', 'highlight') +
-      numBox(d.uyari,   'Uyarı',        'danger')    +
-      numBox(d.hatasiz, 'Hatasız Sefer','success')   +
-      numBox('%' + d.puan, 'Genel Puan','')           +
-    '</div>' +
-
+    '<div class="stat-numbers">'+numBox(d.sefer,'Toplam Sefer','highlight')+numBox(d.uyari,'Uyarı','danger')+numBox(d.hatasiz,'Hatasız Sefer','success')+numBox('%'+d.puan,'Genel Puan','')+'</div>' +
   '</div>';
 }
-
 function statRow(lbl, val) {
-  return '<div class="stat-row">' +
-    '<div class="stat-row-top">' +
-      '<span class="stat-label">' + lbl + '</span>' +
-      '<span class="stat-val">%' + val + '</span>' +
-    '</div>' +
-    '<div class="stat-bar-bg">' +
-      '<div class="stat-bar-fill" style="width:' + val + '%;background:' + barColor(val) + '"></div>' +
-    '</div>' +
-  '</div>';
+  return '<div class="stat-row"><div class="stat-row-top"><span class="stat-label">'+lbl+'</span><span class="stat-val">%'+val+'</span></div><div class="stat-bar-bg"><div class="stat-bar-fill" style="width:'+val+'%;background:'+barColor(val)+'"></div></div></div>';
 }
-
 function numBox(val, lbl, cls) {
-  return '<div class="num-box ' + (cls||'') + '">' +
-    '<div class="num-box-val">' + val + '</div>' +
-    '<div class="num-box-lbl">' + lbl + '</div>' +
-  '</div>';
+  return '<div class="num-box '+(cls||'')+'"><div class="num-box-val">'+val+'</div><div class="num-box-lbl">'+lbl+'</div></div>';
 }
-
 function render() {
-  var d1 = drivers[+document.getElementById('d1').value];
-  var d2 = drivers[+document.getElementById('d2').value];
-  document.getElementById('card1').innerHTML = makeCard(d1, d1.puan > d2.puan);
-  document.getElementById('card2').innerHTML = makeCard(d2, d2.puan > d1.puan);
-  document.getElementById('output').style.display = 'grid';
+  var d1=drivers[+document.getElementById('d1').value];
+  var d2=drivers[+document.getElementById('d2').value];
+  document.getElementById('card1').innerHTML=makeCard(d1,d1.puan>d2.puan);
+  document.getElementById('card2').innerHTML=makeCard(d2,d2.puan>d1.puan);
+  document.getElementById('output').style.display='grid';
+  document.getElementById('aiBox').style.display='block';
+  document.getElementById('aiResult').style.display='none';
 }
-
+function runAI() {
+  var d1=drivers[+document.getElementById('d1').value];
+  var d2=drivers[+document.getElementById('d2').value];
+  var result=document.getElementById('aiResult');
+  var winner=d1.puan>d2.puan?d1:d2;
+  var loser =d1.puan>d2.puan?d2:d1;
+  result.style.display='block';
+  result.innerHTML='⏳ Analiz yapılıyor...';
+  setTimeout(function(){
+    var perfFark=Math.abs(d1.perf-d2.perf);
+    var uyariFark=Math.abs(d1.uyari-d2.uyari);
+    var tutFark=Math.abs(d1.tutarlilik-d2.tutarlilik);
+    result.innerHTML=
+      '🔍 <strong>'+d1.ad+'</strong> ile <strong>'+d2.ad+'</strong> karşılaştırması tamamlandı.<br><br>'+
+      '🏆 <strong>Genel Üstünlük:</strong> '+winner.ad+', '+loser.ad+"'e kıyasla genel puanda <strong>%"+Math.abs(winner.puan-loser.puan)+" önde</strong>.<br><br>"+
+      '📊 <strong>Performans:</strong> '+(perfFark===0?'İki sürücü eşit performans gösteriyor.':(d1.perf>d2.perf?d1.ad:d2.ad)+' performansta '+perfFark+' puan üstün.')+'<br>'+
+      '🛡️ <strong>Güvenli Sürüş:</strong> '+(d1.guven>d2.guven?d1.ad:d2.ad)+' güvenli sürüşte öne çıkıyor ('+Math.abs(d1.guven-d2.guven)+' puan fark).<br>'+
+      '📈 <strong>Tutarlılık:</strong> '+(tutFark<=5?'İki sürücünün tutarlılığı birbirine yakın.':(d1.tutarlilik>d2.tutarlilik?d1.ad:d2.ad)+' aylık tutarlılıkta '+tutFark+' puan daha istikrarlı.')+'<br>'+
+      '⚠️ <strong>Uyarı Analizi:</strong> '+(d1.uyari<d2.uyari?d1.ad:d2.ad)+', '+uyariFark+' daha az uyarı alarak daha kontrollü sürüş profili sergiliyor.<br><br>'+
+      '✅ <strong>Öneri:</strong> '+loser.ad+' için tutarlılık ve güvenli sürüş odaklı koçluk programı önerilir.';
+  },1300);
+}
 render();
 </script>
+
 <script>
 function toggleTheme() {
   document.body.classList.toggle('light');
-  const isLight = document.body.classList.contains('light');
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
-  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+  var isLight=document.body.classList.contains('light');
+  localStorage.setItem('theme',isLight?'light':'dark');
+  document.getElementById('themeLabel').textContent=isLight?'☀️ Açık Mod':'🌙 Koyu Mod';
 }
-(function() {
-  if (localStorage.getItem('theme') === 'light') {
+(function(){
+  if(localStorage.getItem('theme')==='light'){
     document.body.classList.add('light');
-    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+    document.getElementById('themeLabel').textContent='☀️ Açık Mod';
   }
 })();
 </script>
+
 </body>
 </html>

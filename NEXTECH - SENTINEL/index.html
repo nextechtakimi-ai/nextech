@@ -4,11 +4,225 @@
     <meta charset="UTF-8">
     <title>NEXTECH Sentinel | Yönetim Paneli</title>
     <link rel="stylesheet" href="css/panel.css">
+    <style>
+      /* ── YOLDAŞ TOGGLE BTN ─────────────────────────── */
+      .yoldas-fab {
+        position: fixed; bottom: 28px; right: 28px;
+        width: 54px; height: 54px; border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        border: none; cursor: pointer; z-index: 800;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 4px 20px rgba(37,99,235,0.45);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .yoldas-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,99,235,0.6); }
+
+      /* ── YOLDAŞ OVERLAY ────────────────────────────── */
+      .yoldas-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+        z-index: 850; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+      }
+      .yoldas-overlay.acik { opacity: 1; pointer-events: all; }
+
+      /* ── YOLDAŞ DRAWER ─────────────────────────────── */
+      .yoldas-drawer {
+        position: fixed; top: 0; right: 0;
+        width: 380px; height: 100vh;
+        background: #0f1117;
+        border-left: 1px solid #1e2130;
+        z-index: 860; display: flex; flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+        box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+      }
+      .yoldas-drawer.acik { transform: translateX(0); }
+
+      .yoldas-header {
+        padding: 18px 20px;
+        background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(124,58,237,0.15));
+        border-bottom: 1px solid #1e2130;
+        display: flex; align-items: center; gap: 12px;
+      }
+      .yoldas-avatar {
+        width: 38px; height: 38px; border-radius: 50%;
+        background: linear-gradient(135deg,#2563eb,#7c3aed);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px; flex-shrink: 0;
+      }
+      .yoldas-header-info { flex: 1; }
+      .yoldas-header-info strong { display: block; font-size: 14px; font-weight: 700; color: #f0f2f5; }
+      .yoldas-header-info span { font-size: 11px; color: #6b7280; }
+      .yoldas-kapat {
+        width: 30px; height: 30px; border: none; background: #1c1f27;
+        border-radius: 8px; color: #6b7280; cursor: pointer; font-size: 14px;
+        display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+      }
+      .yoldas-kapat:hover { background: #2a2d35; color: #f0f2f5; }
+
+      .yoldas-mesajlar {
+        flex: 1; overflow-y: auto; padding: 16px 18px;
+        display: flex; flex-direction: column; gap: 12px;
+      }
+
+      .mesaj { display: flex; gap: 8px; max-width: 100%; }
+      .mesaj.kullanici { flex-direction: row-reverse; }
+
+      .mesaj-balon {
+        padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.5;
+        max-width: 78%;
+      }
+      .mesaj.bot .mesaj-balon {
+        background: #1c1f27; color: #d1d5db; border-radius: 4px 14px 14px 14px;
+        border: 1px solid #2a2d35;
+      }
+      .mesaj.kullanici .mesaj-balon {
+        background: linear-gradient(135deg,#2563eb,#1d4ed8);
+        color: #fff; border-radius: 14px 4px 14px 14px;
+      }
+      .mesaj-ikon {
+        width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; margin-top: 2px;
+        display: flex; align-items: center; justify-content: center; font-size: 14px;
+      }
+      .mesaj.bot .mesaj-ikon { background: linear-gradient(135deg,#2563eb,#7c3aed); }
+      .mesaj.kullanici .mesaj-ikon { background: #22262f; }
+
+      .yazıyor {
+        display: flex; gap: 4px; padding: 12px 14px;
+        background: #1c1f27; border-radius: 4px 14px 14px 14px;
+        border: 1px solid #2a2d35; width: fit-content;
+      }
+      .yazıyor span {
+        width: 6px; height: 6px; background: #4b5563; border-radius: 50%;
+        animation: bounce 1.2s infinite;
+      }
+      .yazıyor span:nth-child(2) { animation-delay: 0.2s; }
+      .yazıyor span:nth-child(3) { animation-delay: 0.4s; }
+      @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px); background:#60a5fa;} }
+
+      .yoldas-input-row {
+        padding: 14px 18px; border-top: 1px solid #1e2130;
+        display: flex; gap: 8px;
+      }
+      .yoldas-input {
+        flex: 1; background: #1c1f27; border: 1px solid #2a2d35;
+        border-radius: 10px; padding: 10px 14px; font-size: 13px;
+        color: #f0f2f5; outline: none; font-family: inherit;
+        transition: border-color 0.15s;
+      }
+      .yoldas-input:focus { border-color: #2563eb; }
+      .yoldas-input::placeholder { color: #4b5563; }
+      .yoldas-gonder {
+        width: 38px; height: 38px; border-radius: 10px; border: none;
+        background: #2563eb; color: #fff; cursor: pointer; font-size: 16px;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.15s; flex-shrink: 0;
+      }
+      .yoldas-gonder:hover { background: #1d4ed8; }
+
+      /* ── AI ÖNERİ KARTLARI ─────────────────────────── */
+      .ai-oneri-section {
+        padding: 0 24px 0;
+        margin-bottom: 0;
+      }
+      .ai-oneri-header {
+        display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+      }
+      .ai-oneri-header h3 { font-size: 14px; font-weight: 700; color: #f0f2f5; }
+      .ai-oneri-header .ai-badge {
+        font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+        background: linear-gradient(135deg,#2563eb22,#7c3aed22);
+        color: #818cf8; border: 1px solid #2563eb44;
+      }
+
+      .ai-oneri-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .ai-oneri-kart {
+        background: #1c1f27;
+        border: 1px solid #2a2d35;
+        border-radius: 14px;
+        padding: 16px 18px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .ai-oneri-kart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+      .ai-oneri-kart::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      }
+      .ai-oneri-kart.uyari::before { background: linear-gradient(90deg,#f59e0b,#ef4444); }
+      .ai-oneri-kart.bilgi::before  { background: linear-gradient(90deg,#2563eb,#7c3aed); }
+      .ai-oneri-kart.basari::before { background: linear-gradient(90deg,#059669,#10b981); }
+
+      .ai-kart-ust { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+      .ai-kart-ikon { font-size: 18px; }
+      .ai-kart-tip {
+        font-size: 10px; font-weight: 700; padding: 2px 7px;
+        border-radius: 20px; letter-spacing: 0.3px;
+      }
+      .uyari .ai-kart-tip { background: rgba(245,158,11,0.15); color: #f59e0b; }
+      .bilgi  .ai-kart-tip { background: rgba(37,99,235,0.15);  color: #60a5fa; }
+      .basari .ai-kart-tip { background: rgba(5,150,105,0.15);  color: #34d399; }
+
+      .ai-kart-metin { font-size: 12px; color: #9ca3b0; line-height: 1.55; margin-bottom: 12px; }
+      .ai-kart-aksiyon {
+        font-size: 11px; font-weight: 700; color: #60a5fa; cursor: pointer;
+        display: inline-flex; align-items: center; gap: 4px;
+        background: none; border: none; padding: 0; font-family: inherit;
+        transition: color 0.15s;
+      }
+      .ai-kart-aksiyon:hover { color: #93c5fd; }
+
+      /* light mode */
+      body.light .yoldas-drawer { background: #f9fafb; border-left-color: #e2e6ef; }
+      body.light .yoldas-header { border-bottom-color: #e2e6ef; }
+      body.light .yoldas-header-info strong { color: #111318; }
+      body.light .yoldas-kapat { background: #f3f4f6; }
+      body.light .mesaj.bot .mesaj-balon { background: #fff; color: #374151; border-color: #e2e6ef; }
+      body.light .yoldas-input { background: #fff; border-color: #e2e6ef; color: #111318; }
+      body.light .yoldas-input-row { border-top-color: #e2e6ef; }
+      body.light .ai-oneri-kart { background: #fff; border-color: #e2e6ef; }
+      body.light .ai-oneri-header h3 { color: #111318; }
+      body.light .ai-kart-metin { color: #4b5563; }
+    </style>
 </head>
 <body>
 
+<!-- YOLDAŞ OVERLAY -->
+<div class="yoldas-overlay" id="yoldasOverlay" onclick="yoldasKapat()"></div>
+
+<!-- YOLDAŞ DRAWER -->
+<div class="yoldas-drawer" id="yoldasDrawer">
+  <div class="yoldas-header">
+    <div class="yoldas-avatar">🤖</div>
+    <div class="yoldas-header-info">
+      <strong>YOLDAŞ</strong>
+      <span>Yapay Zeka Filo Asistanı · Aktif</span>
+    </div>
+    <button class="yoldas-kapat" onclick="yoldasKapat()">✕</button>
+  </div>
+  <div class="yoldas-mesajlar" id="yoldasMesajlar">
+    <div class="mesaj bot">
+      <div class="mesaj-ikon">🤖</div>
+      <div class="mesaj-balon">Merhaba! Ben YOLDAŞ, filo yönetim asistanınızım. Sürücü performansı, rota optimizasyonu veya uyarılar hakkında soru sorabilirsiniz.</div>
+    </div>
+  </div>
+  <div class="yoldas-input-row">
+    <input class="yoldas-input" id="yoldasInput" placeholder="Soru sorun..." onkeydown="if(event.key==='Enter') yoldasGonder()">
+    <button class="yoldas-gonder" onclick="yoldasGonder()">➤</button>
+  </div>
+</div>
+
+<!-- YOLDAŞ FAB -->
+<button class="yoldas-fab" onclick="yoldasAc()" title="YOLDAŞ Asistan">🤖</button>
+
 <div class="sidebar">
-  <img src="assets/logo.png" class="logo">
+  <img src="assets/logo.png" class="logo" onerror="this.style.display='none'">
   <ul>
     <li class="active"><a href="index.html">Dashboard</a></li>
     <li><a href="drivers.html">Sürücüler</a></li>
@@ -16,6 +230,8 @@
     <li><a href="reports.html">Raporlar</a></li>
     <li><a href="harita.html">Harita / Rota</a></li>
     <li><a href="karsilastirma.html">Karşılaştırma</a></li>
+    <li><a href="destek.html">Destek Talebi</a></li>
+    <li><a href="abonelik.html">Abonelik</a></li>
   </ul>
   <div class="theme-toggle" onclick="toggleTheme()">
     <span id="themeLabel">🌙 Koyu Mod</span>
@@ -25,76 +241,121 @@
 
 <main class="content">
 
-    <header class="topbar">
-        <h1>Sentinel Dashboard</h1>
-        <span></span>
-    </header>
+  <header class="topbar">
+    <h1>Sentinel Dashboard</h1>
+    <span></span>
+  </header>
 
-    <section class="cards">
-        <div class="card"><h2>Toplam Araç</h2><p>586</p></div>
-        <div class="card"><h2>Aktif Sürücü</h2><p>249</p></div>
-        <div class="card"><h2>Aylık Uyarı</h2><p>312</p></div>
-        <div class="card"><h2>Riskli Sürücü</h2><p>52</p></div>
-    </section>
+  <section class="cards">
+    <div class="card"><h2>Toplam Araç</h2><p>586</p></div>
+    <div class="card"><h2>Aktif Sürücü</h2><p>249</p></div>
+    <div class="card"><h2>Aylık Uyarı</h2><p>312</p></div>
+    <div class="card"><h2>Riskli Sürücü</h2><p>52</p></div>
+  </section>
 
-    <section class="chart-section">
-      <div class="dashboard-row">
+  <!-- ── YOLDAŞ AI ÖNERİLERİ ──────────────────────────── -->
+  <div class="ai-oneri-section">
+    <div class="ai-oneri-header">
+      <h3>🤖 YOLDAŞ Günlük Öneriler</h3>
+      <span class="ai-badge">YZ ANALİZ</span>
+    </div>
+    <div class="ai-oneri-grid">
 
-        <div class="chart-card">
-          <h3>📊 Performans Grafiği</h3>
-          <div class="chart">
-            <div class="bar" style="--value: 85; --color:#1e90ff;" data-value="85"><span>Sürücü 1</span></div>
-            <div class="bar" style="--value: 72; --color:#28a745;" data-value="72"><span>Sürücü 2</span></div>
-            <div class="bar" style="--value: 90; --color:#ff9800;" data-value="90"><span>Sürücü 3</span></div>
-            <div class="bar" style="--value: 65; --color:#e91e63;" data-value="65"><span>Sürücü 4</span></div>
-            <div class="bar" style="--value: 78; --color:#9c27b0;" data-value="78"><span>Sürücü 5</span></div>
-            <div class="bar" style="--value: 88; --color:#009688;" data-value="88"><span>Sürücü 6</span></div>
-            <div class="bar" style="--value: 70; --color:#795548;" data-value="70"><span>Sürücü 7</span></div>
-            <div class="bar" style="--value: 95; --color:#3f51b5;" data-value="95"><span>Sürücü 8</span></div>
-            <div class="bar" style="--value: 60; --color:#f44336;" data-value="60"><span>Sürücü 9</span></div>
-            <div class="bar" style="--value: 82; --color:#00bcd4;" data-value="82"><span>Sürücü 10</span></div>
-          </div>
+      <div class="ai-oneri-kart uyari">
+        <div class="ai-kart-ust">
+          <span class="ai-kart-ikon">⚠️</span>
+          <span class="ai-kart-tip">UYARI</span>
         </div>
-
-        <div class="leaderboard">
-          <h3>🏆 Başarı Sıralaması</h3>
-          <ul>
-            <li class="gold">1. Sürücü 8 <span>95%</span></li>
-            <li class="silver">2. Sürücü 3 <span>90%</span></li>
-            <li class="bronze">3. Sürücü 6 <span>88%</span></li>
-            <li>4. Sürücü 1 <span>85%</span></li>
-            <li>5. Sürücü 10 <span>82%</span></li>
-            <li>6. Sürücü 5 <span>78%</span></li>
-            <li>7. Sürücü 2 <span>72%</span></li>
-            <li>8. Sürücü 7 <span>70%</span></li>
-            <li>9. Sürücü 4 <span>65%</span></li>
-            <li>10. Sürücü 9 <span>60%</span></li>
-          </ul>
-        </div>
-
+        <div class="ai-kart-metin">Serkan Yıldız'ın performansı son 7 günde %67'ye geriledi. Ani fren sayısı ortalamanın 2.3x üzerinde. Sürücü ile değerlendirme önerilir.</div>
+        <button class="ai-kart-aksiyon" onclick="yoldasAcMesajla('Serkan Yıldız hakkında detaylı analiz ver')">Detay Gör →</button>
       </div>
-    </section>
 
-    <div class="user-panel">
-      <h3>👤 Aktif Sürücüler</h3>
-      <div class="user-list">
-        <div class="user"><img src="https://i.pravatar.cc/100?img=12"><div><strong>Ahmet Yılmaz</strong><span>Performans: %92</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=32"><div><strong>Mehmet Kaya</strong><span>Performans: %78</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=45"><div><strong>Can Demir</strong><span>Performans: %88</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=18"><div><strong>Emre Şahin</strong><span>Performans: %81</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=21"><div><strong>Burak Aydın</strong><span>Performans: %74</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=27"><div><strong>Onur Kılıç</strong><span>Performans: %89</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=33"><div><strong>Serkan Yıldız</strong><span>Performans: %67</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=41"><div><strong>Mert Koç</strong><span>Performans: %85</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=50"><div><strong>Ali Çetin</strong><span>Performans: %73</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=56"><div><strong>Hakan Arslan</strong><span>Performans: %90</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=60"><div><strong>Furkan Öz</strong><span>Performans: %76</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=65"><div><strong>Yusuf Polat</strong><span>Performans: %83</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=19"><div><strong>Kaan Uslu</strong><span>Performans: %69</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=17"><div><strong>Oğuzhan Martin</strong><span>Performans: %87</span></div><button>Detay</button></div>
-        <div class="user"><img src="https://i.pravatar.cc/100?img=15"><div><strong>Erdem Keskinci</strong><span>Performans: %71</span></div><button>Detay</button></div>
+      <div class="ai-oneri-kart bilgi">
+        <div class="ai-kart-ust">
+          <span class="ai-kart-ikon">📍</span>
+          <span class="ai-kart-tip">OPTİMİZASYON</span>
+        </div>
+        <div class="ai-kart-metin">İstanbul–Ankara güzergahında ortalama 23 dk gecikme tespit edildi. Alternatif rota kullanımı yakıt maliyetini %8 düşürebilir.</div>
+        <button class="ai-kart-aksiyon" onclick="yoldasAcMesajla('İstanbul Ankara rota optimizasyonu öner')">Rotayı İncele →</button>
+      </div>
+
+      <div class="ai-oneri-kart basari">
+        <div class="ai-kart-ust">
+          <span class="ai-kart-ikon">🏆</span>
+          <span class="ai-kart-tip">BAŞARI</span>
+        </div>
+        <div class="ai-kart-metin">Ahmet Yılmaz bu ay 8 arka arkaya kusursuz sefer tamamladı. Ödüllendirme sistemi motivasyonu %15 artırabilir.</div>
+        <button class="ai-kart-aksiyon" onclick="yoldasAcMesajla('Sürücü ödüllendirme sistemi öner')">Öneri Al →</button>
+      </div>
+
+      <div class="ai-oneri-kart bilgi">
+        <div class="ai-kart-ust">
+          <span class="ai-kart-ikon">🌡️</span>
+          <span class="ai-kart-tip">FROST</span>
+        </div>
+        <div class="ai-kart-metin">3 araçta dorse sıcaklığı son 24 saatte belirlenen aralığın dışına çıktı. İlaç/gıda taşıyan araçların kontrolü önerilir.</div>
+        <button class="ai-kart-aksiyon" onclick="yoldasAcMesajla('Sıcaklık uyarısı veren araçları listele')">Araçları Gör →</button>
+      </div>
+
+    </div>
+  </div>
+  <!-- ── /YOLDAŞ AI ÖNERİLERİ ─────────────────────────── -->
+
+  <section class="chart-section">
+    <div class="dashboard-row">
+      <div class="chart-card">
+        <h3>📊 Performans Grafiği</h3>
+        <div class="chart">
+          <div class="bar" style="--value:85;--color:#1e90ff" data-value="85"><span>Sürücü 1</span></div>
+          <div class="bar" style="--value:72;--color:#28a745" data-value="72"><span>Sürücü 2</span></div>
+          <div class="bar" style="--value:90;--color:#ff9800" data-value="90"><span>Sürücü 3</span></div>
+          <div class="bar" style="--value:65;--color:#e91e63" data-value="65"><span>Sürücü 4</span></div>
+          <div class="bar" style="--value:78;--color:#9c27b0" data-value="78"><span>Sürücü 5</span></div>
+          <div class="bar" style="--value:88;--color:#009688" data-value="88"><span>Sürücü 6</span></div>
+          <div class="bar" style="--value:70;--color:#795548" data-value="70"><span>Sürücü 7</span></div>
+          <div class="bar" style="--value:95;--color:#3f51b5" data-value="95"><span>Sürücü 8</span></div>
+          <div class="bar" style="--value:60;--color:#f44336" data-value="60"><span>Sürücü 9</span></div>
+          <div class="bar" style="--value:82;--color:#00bcd4" data-value="82"><span>Sürücü 10</span></div>
+        </div>
+      </div>
+      <div class="leaderboard">
+        <h3>🏆 Başarı Sıralaması</h3>
+        <ul>
+          <li class="gold">1. Sürücü 8 <span>95%</span></li>
+          <li class="silver">2. Sürücü 3 <span>90%</span></li>
+          <li class="bronze">3. Sürücü 6 <span>88%</span></li>
+          <li>4. Sürücü 1 <span>85%</span></li>
+          <li>5. Sürücü 10 <span>82%</span></li>
+          <li>6. Sürücü 5 <span>78%</span></li>
+          <li>7. Sürücü 2 <span>72%</span></li>
+          <li>8. Sürücü 7 <span>70%</span></li>
+          <li>9. Sürücü 4 <span>65%</span></li>
+          <li>10. Sürücü 9 <span>60%</span></li>
+        </ul>
       </div>
     </div>
+  </section>
+
+  <div class="user-panel">
+    <h3>👤 Aktif Sürücüler</h3>
+    <div class="user-list">
+      <div class="user"><img src="https://i.pravatar.cc/100?img=12"><div><strong>Ahmet Yılmaz</strong><span>Performans: %92</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=32"><div><strong>Mehmet Kaya</strong><span>Performans: %78</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=45"><div><strong>Can Demir</strong><span>Performans: %88</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=18"><div><strong>Emre Şahin</strong><span>Performans: %81</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=21"><div><strong>Burak Aydın</strong><span>Performans: %74</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=27"><div><strong>Onur Kılıç</strong><span>Performans: %89</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=33"><div><strong>Serkan Yıldız</strong><span>Performans: %67</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=41"><div><strong>Mert Koç</strong><span>Performans: %85</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=50"><div><strong>Ali Çetin</strong><span>Performans: %73</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=56"><div><strong>Hakan Arslan</strong><span>Performans: %90</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=60"><div><strong>Furkan Öz</strong><span>Performans: %76</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=65"><div><strong>Yusuf Polat</strong><span>Performans: %83</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=19"><div><strong>Kaan Uslu</strong><span>Performans: %69</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=17"><div><strong>Oğuzhan Martin</strong><span>Performans: %87</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=15"><div><strong>Erdem Keskinci</strong><span>Performans: %71</span></div><button>Detay</button></div>
+    </div>
+  </div>
 
 </main>
 
@@ -109,18 +370,94 @@
 </div>
 
 <script>
-function toggleTheme() {
-  document.body.classList.toggle('light');
-  const isLight = document.body.classList.contains('light');
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
-  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
-}
-(function() {
-  if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light');
-    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  // ── YOLDAŞ ─────────────────────────────────────────────
+  var yoldasAcik = false;
+
+  var botCevaplar = {
+    'serkan': 'Serkan Yıldız analizi: Son 7 günde ani fren 14 kez, aşırı hız 3 kez tespit edildi. Ortalama skorun 22 puan altında. Bire-bir koçluk seansı önerilir.',
+    'rota': 'İstanbul–Ankara için alternatif rota: TEM yerine D-100 + Bolu bypass kombinasyonu ortalama 18 dk kazandırır ve yakıtta %6-8 tasarruf sağlar.',
+    'sıcaklık': '3 araç tespit edildi: 34 AK 921 (-2°C sapma), 06 TL 447 (+3°C sapma), 41 BC 332 (-1.5°C sapma). Hepsi son 6 saat içinde uyarı üretti.',
+    'ödül': 'Öneri: Aylık %90+ skoru koruyan sürücüye bonus prim, arka arkaya 5 kusursuz sefer için dijital rozet sistemi kurulabilir. Motivasyon etkisi literatürde %12-18 artış.',
+    'default': 'Filo verilerinizi analiz ediyorum... Sürücü performansı, rota optimizasyonu, yakıt tasarrufu veya uyarı yönetimi konularında yardımcı olabilirim.'
+  };
+
+  function yoldasCevapBul(soru) {
+    soru = soru.toLowerCase();
+    if (soru.includes('serkan') || soru.includes('fren') || soru.includes('risk')) return botCevaplar['serkan'];
+    if (soru.includes('rota') || soru.includes('ankara') || soru.includes('istanbul')) return botCevaplar['rota'];
+    if (soru.includes('sıcaklık') || soru.includes('frost') || soru.includes('araç')) return botCevaplar['sıcaklık'];
+    if (soru.includes('ödül') || soru.includes('motivasyon') || soru.includes('prim')) return botCevaplar['ödül'];
+    return botCevaplar['default'];
   }
-})();
+
+  function yoldasAc() {
+    document.getElementById('yoldasDrawer').classList.add('acik');
+    document.getElementById('yoldasOverlay').classList.add('acik');
+    yoldasAcik = true;
+    setTimeout(function() { document.getElementById('yoldasInput').focus(); }, 300);
+  }
+
+  function yoldasKapat() {
+    document.getElementById('yoldasDrawer').classList.remove('acik');
+    document.getElementById('yoldasOverlay').classList.remove('acik');
+    yoldasAcik = false;
+  }
+
+  function yoldasAcMesajla(mesaj) {
+    yoldasAc();
+    setTimeout(function() {
+      mesajEkle(mesaj, 'kullanici');
+      botYazıyor(mesaj);
+    }, 350);
+  }
+
+  function mesajEkle(metin, tip) {
+    var kutu = document.getElementById('yoldasMesajlar');
+    var div = document.createElement('div');
+    div.className = 'mesaj ' + tip;
+    var ikon = tip === 'bot' ? '🤖' : '👤';
+    div.innerHTML = '<div class="mesaj-ikon">' + ikon + '</div><div class="mesaj-balon">' + metin + '</div>';
+    kutu.appendChild(div);
+    kutu.scrollTop = kutu.scrollHeight;
+  }
+
+  function botYazıyor(soru) {
+    var kutu = document.getElementById('yoldasMesajlar');
+    var yazDiv = document.createElement('div');
+    yazDiv.className = 'mesaj bot';
+    yazDiv.id = 'yaziyorDiv';
+    yazDiv.innerHTML = '<div class="mesaj-ikon">🤖</div><div class="yazıyor"><span></span><span></span><span></span></div>';
+    kutu.appendChild(yazDiv);
+    kutu.scrollTop = kutu.scrollHeight;
+    setTimeout(function() {
+      var el = document.getElementById('yaziyorDiv');
+      if (el) el.remove();
+      mesajEkle(yoldasCevapBul(soru), 'bot');
+    }, 1200);
+  }
+
+  function yoldasGonder() {
+    var input = document.getElementById('yoldasInput');
+    var metin = input.value.trim();
+    if (!metin) return;
+    input.value = '';
+    mesajEkle(metin, 'kullanici');
+    botYazıyor(metin);
+  }
+
+  // ── TEMA ───────────────────────────────────────────────
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+    var isLight = document.body.classList.contains('light');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+  }
+  (function() {
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+    }
+  })();
 </script>
 
 </body>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>NEXTECH Sentinel | Destek Talebi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/panel.css">
+  <style>
+
+    .destek-wrap {
+      padding: 32px;
+      max-width: 640px;
+    }
+
+    .destek-card {
+      background: #1c1f27;
+      border: 1px solid #2a2d35;
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .destek-card h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f0f2f5;
+      margin-bottom: 6px;
+    }
+
+    .destek-card .subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 11px 14px;
+      border: 1px solid #2a2d35;
+      border-radius: 10px;
+      background: #22262f;
+      color: #e2e4e9;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.15s;
+      resize: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #2563eb;
+      background: #1e2229;
+    }
+
+    .form-group textarea { min-height: 130px; }
+
+    /* ACİLİYET SEÇİMİ */
+    .aciliyet-group { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .aciliyet-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #2a2d35;
+      background: #22262f;
+      color: #9ca3b0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .aciliyet-btn:hover { border-color: #3b4155; color: #e2e4e9; }
+
+    .aciliyet-btn.selected-dusuk  { background:#14201a; border-color:#166534; color:#4ade80; }
+    .aciliyet-btn.selected-orta   { background:#1e2010; border-color:#854d0e; color:#fb923c; }
+    .aciliyet-btn.selected-yuksek { background:#20111a; border-color:#9f1239; color:#f87171; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.12s;
+      margin-top: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .submit-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+
+    /* BAŞARI MESAJI */
+    .success-box {
+      display: none;
+      margin-top: 24px;
+      padding: 18px 20px;
+      background: #14201a;
+      border: 1px solid #166534;
+      border-radius: 12px;
+      color: #4ade80;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .success-box .check { font-size: 28px; display: block; margin-bottom: 8px; }
+
+    /* LIGHT MODE */
+    body.light .destek-card    { background: #fff; border-color: #e2e6ef; }
+    body.light .destek-card h2 { color: #111318; }
+    body.light .form-group input,
+    body.light .form-group select,
+    body.light .form-group textarea { background: #f4f6fb; border-color: #e2e6ef; color: #111318; }
+    body.light .form-group input:focus,
+    body.light .form-group select:focus,
+    body.light .form-group textarea:focus { background: #fff; border-color: #2563eb; }
+    body.light .aciliyet-btn   { background: #f4f6fb; border-color: #e2e6ef; color: #6b7280; }
+    body.light .success-box    { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <img src="assets/logo.png" class="logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+  <div style="display:none;font-size:15px;font-weight:700;color:#60a5fa;padding:0 8px;margin-bottom:28px;">NEXTECH</div>
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="drivers.html">Sürücüler</a></li>
+    <li><a href="vehicles.html">Araçlar</a></li>
+    <li><a href="reports.html">Raporlar</a></li>
+    <li><a href="harita.html">Harita / Rota</a></li>
+    <li><a href="karsilastirma.html">Karşılaştırma</a></li>
+    <li class="active"><a href="destek.html">Destek Talebi</a></li>
+<li><a href="abonelik.html">Abonelik</a></li>
+  </ul>
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <span id="themeLabel">🌙 Koyu Mod</span>
+    <div class="toggle-switch"></div>
+  </div>
+</div>
+
+<main class="content">
+  <header class="topbar">
+    <h1>Destek Talebi</h1>
+    <span style="font-size:12px;color:#6b7280;">Size en kısa sürede geri döneceğiz</span>
+  </header>
+
+  <div class="destek-wrap">
+    <div class="destek-card">
+      <h2>🎫 Yeni Destek Talebi Oluştur</h2>
+      <p class="subtitle">Aşağıdaki formu doldurarak destek ekibimize ulaşabilirsiniz.</p>
+
+      <div class="form-group">
+        <label>Aciliyet Seviyesi</label>
+        <div class="aciliyet-group">
+          <div class="aciliyet-btn" onclick="secAciliyet('dusuk', this)">🟢 Düşük</div>
+          <div class="aciliyet-btn" onclick="secAciliyet('orta', this)">🟡 Orta</div>
+          <div class="aciliyet-btn" onclick="secAciliyet('yuksek', this)">🔴 Yüksek</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Konu Başlığı</label>
+        <input type="text" id="konu" placeholder="Talebinizin konusunu kısaca yazın...">
+      </div>
+
+      <div class="form-group">
+        <label>Mesajınız</label>
+        <textarea id="mesaj" placeholder="Sorununuzu veya talebinizi detaylıca açıklayın..."></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="gonder()">Talebi Gönder</button>
+
+      <div class="success-box" id="successBox">
+        <span class="check">✅</span>
+        <strong>Talebiniz oluşturulmuştur.</strong><br>
+        Destek ekibimiz en kısa sürede tarafınızla iletişime geçecektir.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+var seciliAciliyet = '';
+
+function secAciliyet(seviye, el) {
+  seciliAciliyet = seviye;
+  document.querySelectorAll('.aciliyet-btn').forEach(function(b) {
+    b.className = 'aciliyet-btn';
+  });
+  el.classList.add('selected-' + seviye);
+}
+
+function gonder() {
+  var konu  = document.getElementById('konu').value.trim();
+  var mesaj = document.getElementById('mesaj').value.trim();
+
+  if (!seciliAciliyet) { alert('Lütfen aciliyet seviyesi seçin.'); return; }
+  if (!konu)           { alert('Lütfen konu başlığı girin.'); return; }
+  if (!mesaj)          { alert('Lütfen mesajınızı yazın.'); return; }
+
+  var btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Gönderiliyor...';
+
+  setTimeout(function() {
+    btn.style.display = 'none';
+    document.getElementById('successBox').style.display = 'block';
+  }, 900);
+}
+</script>
+
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  var isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
+  }
+})();
+</script>
+
+</body>
+</html>
