@@ -8,17 +8,9 @@
       .ai-oneri-section { padding: 0 24px; margin-bottom: 28px; }
       .ai-oneri-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-top: 8px; }
       .ai-oneri-header h3 { font-size: 14px; font-weight: 700; color: #f0f2f5; }
-      .ai-oneri-header .ai-badge {
-        font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
-        background: linear-gradient(135deg,#2563eb22,#7c3aed22);
-        color: #818cf8; border: 1px solid #2563eb44;
-      }
+      .ai-oneri-header .ai-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: linear-gradient(135deg,#2563eb22,#7c3aed22); color: #818cf8; border: 1px solid #2563eb44; }
       .ai-oneri-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
-      .ai-oneri-kart {
-        background: #1c1f27; border: 1px solid #2a2d35; border-radius: 14px;
-        padding: 16px 18px; position: relative; overflow: hidden;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
+      .ai-oneri-kart { background: #1c1f27; border: 1px solid #2a2d35; border-radius: 14px; padding: 16px 18px; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
       .ai-oneri-kart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
       .ai-oneri-kart::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
       .ai-oneri-kart.uyari::before { background: linear-gradient(90deg,#f59e0b,#ef4444); }
@@ -31,15 +23,36 @@
       .bilgi  .ai-kart-tip { background: rgba(37,99,235,0.15);  color: #60a5fa; }
       .basari .ai-kart-tip { background: rgba(5,150,105,0.15);  color: #34d399; }
       .ai-kart-metin { font-size: 12px; color: #9ca3b0; line-height: 1.55; margin-bottom: 12px; }
-      .ai-kart-aksiyon {
-        font-size: 11px; font-weight: 700; color: #60a5fa; cursor: pointer;
-        display: inline-flex; align-items: center; gap: 4px;
-        background: none; border: none; padding: 0; font-family: inherit; transition: color 0.15s;
-      }
+      .ai-kart-aksiyon { font-size: 11px; font-weight: 700; color: #60a5fa; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; background: none; border: none; padding: 0; font-family: inherit; transition: color 0.15s; }
       .ai-kart-aksiyon:hover { color: #93c5fd; }
       body.light .ai-oneri-kart { background: #fff; border-color: #e2e6ef; }
       body.light .ai-oneri-header h3 { color: #111318; }
       body.light .ai-kart-metin { color: #4b5563; }
+
+      /* MODAL */
+      .modal { position:fixed; inset:0; background:rgba(0,0,0,0.65); display:none; align-items:center; justify-content:center; z-index:999; backdrop-filter:blur(4px); }
+      .modal.open { display:flex; }
+      .modal-content { background:#1c1f27; border-radius:18px; padding:28px; width:380px; max-width:92%; position:relative; box-shadow:0 24px 60px rgba(0,0,0,0.55); border:1px solid #2a2d35; color:#e2e4e9; }
+      .modal-close { position:absolute; right:18px; top:14px; font-size:20px; cursor:pointer; color:#6b7280; background:none; border:none; }
+      .modal-close:hover { color:#e2e4e9; }
+      .modal-header { display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+      .modal-avatar { width:56px; height:56px; border-radius:50%; border:2px solid #2563eb; object-fit:cover; }
+      .modal-header h3 { margin:0; font-size:17px; color:#f0f2f5; }
+      .modal-header span { font-size:12px; color:#6b7280; }
+      .modal-section { margin-bottom:14px; }
+      .modal-section label { font-size:11px; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px; }
+      .modal-bio { font-size:13px; color:#9ca3b0; line-height:1.6; background:#22262f; border-radius:8px; padding:10px 12px; }
+      .modal-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+      .modal-stat { background:#22262f; border-radius:8px; padding:10px; text-align:center; border:1px solid #2a2d35; }
+      .modal-stat-val { font-size:20px; font-weight:700; color:#f0f2f5; }
+      .modal-stat-lbl { font-size:10px; color:#6b7280; margin-top:2px; }
+      .perf-bar-bg { height:8px; background:#2a2d35; border-radius:99px; overflow:hidden; margin-top:6px; }
+      .perf-bar-fill { height:100%; border-radius:99px; }
+      body.light .modal-content { background:#fff; border-color:#e2e6ef; color:#111318; }
+      body.light .modal-bio { background:#f4f6fb; color:#4b5563; }
+      body.light .modal-stat { background:#f4f6fb; border-color:#e2e6ef; }
+      body.light .modal-stat-val { color:#111318; }
+      body.light .perf-bar-bg { background:#e8eaed; }
     </style>
 </head>
 <body>
@@ -91,7 +104,7 @@
 
       <div class="ai-oneri-kart bilgi">
         <div class="ai-kart-ust"><span class="ai-kart-ikon">📍</span><span class="ai-kart-tip">OPTİMİZASYON</span></div>
-        <div class="ai-kart-metin">İstanbul–Ankara güzergahında ortalama 23 dk gecikme tespit edildi. Alternatif rota kullanımı yakıt maliyetini %8 düşürebilir.</div>
+        <div class="ai-kart-metin">İstanbul–Ankara güzergahında ortalama 23 dk gecikme tespit edildi. Alternatif rota kullanımı maliyeti düşürebilir.</div>
         <button class="ai-kart-aksiyon" onclick="yoldasAcMesajla('İstanbul Ankara rota optimizasyonu öner')">Rotayı İncele →</button>
       </div>
 
@@ -108,10 +121,10 @@
       </div>
 
       <div class="ai-oneri-kart bilgi">
-  <div class="ai-kart-ust"><span class="ai-kart-ikon">📈</span><span class="ai-kart-tip">TREND</span></div>
-  <div class="ai-kart-metin">Kaan Uslu ve Erdem Keskinci bu ay uyarı sayısını önemli ölçüde artırdı. Aylık trend ortalamanın %50 üzerinde seyrediyor, erken müdahale önerilir.</div>
-  <button class="ai-kart-aksiyon" onclick="yoldasAcMesajla('Aylık uyarı trendi artan sürücüleri listele')">Trendi Gör →</button>
-</div>
+        <div class="ai-kart-ust"><span class="ai-kart-ikon">📈</span><span class="ai-kart-tip">TREND</span></div>
+        <div class="ai-kart-metin">Kaan Uslu ve Erdem Keskinci bu ay uyarı sayısını önemli ölçüde artırdı. Aylık trend ortalamanın %50 üzerinde seyrediyor.</div>
+        <button class="ai-kart-aksiyon" onclick="yoldasAcMesajla('Aylık uyarı trendi artan sürücüleri listele')">Trendi Gör →</button>
+      </div>
 
       <div class="ai-oneri-kart basari">
         <div class="ai-kart-ust"><span class="ai-kart-ikon">🔧</span><span class="ai-kart-tip">BAKIM</span></div>
@@ -160,48 +173,107 @@
   <div class="user-panel">
     <h3>👤 Aktif Sürücüler</h3>
     <div class="user-list">
-      <div class="user"><img src="https://i.pravatar.cc/100?img=12"><div><strong>Ahmet Yılmaz</strong><span>Performans: %92</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=32"><div><strong>Mehmet Kaya</strong><span>Performans: %78</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=45"><div><strong>Can Demir</strong><span>Performans: %88</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=18"><div><strong>Emre Şahin</strong><span>Performans: %81</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=21"><div><strong>Burak Aydın</strong><span>Performans: %74</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=27"><div><strong>Onur Kılıç</strong><span>Performans: %89</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=33"><div><strong>Serkan Yıldız</strong><span>Performans: %67</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=41"><div><strong>Mert Koç</strong><span>Performans: %85</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=50"><div><strong>Ali Çetin</strong><span>Performans: %73</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=56"><div><strong>Hakan Arslan</strong><span>Performans: %90</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=60"><div><strong>Furkan Öz</strong><span>Performans: %76</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=65"><div><strong>Yusuf Polat</strong><span>Performans: %83</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=19"><div><strong>Kaan Uslu</strong><span>Performans: %69</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=17"><div><strong>Oğuzhan Martin</strong><span>Performans: %87</span></div><button>Detay</button></div>
-      <div class="user"><img src="https://i.pravatar.cc/100?img=15"><div><strong>Erdem Keskinci</strong><span>Performans: %71</span></div><button>Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=12"><div><strong>Ahmet Yılmaz</strong><span>Performans: %92</span></div><button onclick="openModal(0)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=32"><div><strong>Mehmet Kaya</strong><span>Performans: %78</span></div><button onclick="openModal(1)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=45"><div><strong>Can Demir</strong><span>Performans: %88</span></div><button onclick="openModal(2)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=18"><div><strong>Emre Şahin</strong><span>Performans: %81</span></div><button onclick="openModal(3)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=21"><div><strong>Burak Aydın</strong><span>Performans: %74</span></div><button onclick="openModal(4)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=27"><div><strong>Onur Kılıç</strong><span>Performans: %89</span></div><button onclick="openModal(5)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=33"><div><strong>Serkan Yıldız</strong><span>Performans: %67</span></div><button onclick="openModal(6)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=41"><div><strong>Mert Koç</strong><span>Performans: %85</span></div><button onclick="openModal(7)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=50"><div><strong>Ali Çetin</strong><span>Performans: %73</span></div><button onclick="openModal(8)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=56"><div><strong>Hakan Arslan</strong><span>Performans: %90</span></div><button onclick="openModal(9)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=60"><div><strong>Furkan Öz</strong><span>Performans: %76</span></div><button onclick="openModal(10)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=65"><div><strong>Yusuf Polat</strong><span>Performans: %83</span></div><button onclick="openModal(11)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=19"><div><strong>Kaan Uslu</strong><span>Performans: %69</span></div><button onclick="openModal(12)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=17"><div><strong>Oğuzhan Martin</strong><span>Performans: %87</span></div><button onclick="openModal(13)">Detay</button></div>
+      <div class="user"><img src="https://i.pravatar.cc/100?img=15"><div><strong>Erdem Keskinci</strong><span>Performans: %71</span></div><button onclick="openModal(14)">Detay</button></div>
     </div>
   </div>
 
 </main>
 
-<div class="modal" id="userModal">
+<!-- MODAL -->
+<div class="modal" id="driverModal">
   <div class="modal-content">
-    <span class="close">&times;</span>
-    <h3 id="modalName">Sürücü Adı</h3>
-    <p>🚗 Çıkılan Sefer Sayısı: <strong id="modalTrips">58</strong></p>
-    <p>📊 Performans: <strong id="modalPerf">%85</strong></p>
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-header">
+      <img class="modal-avatar" id="mImg" src="">
+      <div><h3 id="mName"></h3><span id="mTitle"></span></div>
+    </div>
+    <div class="modal-section">
+      <label>Özgeçmiş</label>
+      <div class="modal-bio" id="mBio"></div>
+    </div>
+    <div class="modal-section">
+      <label>İstatistikler</label>
+      <div class="modal-stats">
+        <div class="modal-stat"><div class="modal-stat-val" id="mSefer"></div><div class="modal-stat-lbl">Toplam Sefer</div></div>
+        <div class="modal-stat"><div class="modal-stat-val" id="mUyari"></div><div class="modal-stat-lbl">Uyarı</div></div>
+        <div class="modal-stat"><div class="modal-stat-val" id="mDeneyim"></div><div class="modal-stat-lbl">Yıl Deneyim</div></div>
+      </div>
+    </div>
+    <div class="modal-section">
+      <label>Performans — <span id="mPerfVal"></span></label>
+      <div class="perf-bar-bg"><div class="perf-bar-fill" id="mPerfBar"></div></div>
+    </div>
   </div>
 </div>
 
 <script>
-  function toggleTheme() {
-    document.body.classList.toggle('light');
-    var isLight = document.body.classList.contains('light');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+var drivers = [
+  { ad:"Ahmet Yılmaz",   unvan:"Kıdemli Sürücü",  img:"https://i.pravatar.cc/100?img=12", bio:"Sakarya doğumlu. 12 yıldır sektörde aktif. NEXTECH ekibine 2019'da katıldı. Uzun mesafe ve hassas yük taşıma konusunda uzman.", sefer:120, uyari:8,  deneyim:12, perf:92 },
+  { ad:"Mehmet Kaya",    unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=32", bio:"Adapazarı'ndan. 7 yıllık deneyimiyle filonun güvenilir isimlerinden. Özellikle şehiriçi teslimat rotalarında başarılı.", sefer:105, uyari:14, deneyim:7,  perf:78 },
+  { ad:"Can Demir",      unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=45", bio:"Serdivan'da ikamet ediyor. 5 yıldır aktif sürücü. Soğuk zincir lojistiği konusunda sertifikalı.", sefer:98,  uyari:19, deneyim:5,  perf:88 },
+  { ad:"Emre Şahin",     unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=18", bio:"Hendek kökenli. Hem kara hem de ro-ro taşımacılığı deneyimine sahip. 2021'de NEXTECH'e geçiş yaptı.", sefer:90,  uyari:22, deneyim:6,  perf:81 },
+  { ad:"Burak Aydın",    unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=21", bio:"Karasu'da yaşıyor. Ağırlıklı olarak İstanbul–Sakarya hattında görev yapıyor. Son 3 ayda uyarı sayısını yarıya indirdi.", sefer:88,  uyari:25, deneyim:4,  perf:74 },
+  { ad:"Onur Kılıç",     unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=27", bio:"Sapanca'dan. Ağır tonajlı araç deneyimi var. Ekip içinde en sakin sürüş stiline sahip sürücüler arasında gösteriliyor.", sefer:85,  uyari:28, deneyim:5,  perf:89 },
+  { ad:"Serkan Yıldız",  unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=33", bio:"Arifiye'de ikamet ediyor. Frigorifik araç kullanımı konusunda deneyimli. Performans artışı için koçluk programına dahil edildi.", sefer:82,  uyari:38, deneyim:3,  perf:67 },
+  { ad:"Mert Koç",       unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=41", bio:"Geyve'den. Küçük tonajlı dağıtım araçlarında uzman. Müşteri memnuniyeti skorları en yüksek sürücülerden biri.", sefer:80,  uyari:21, deneyim:4,  perf:85 },
+  { ad:"Ali Çetin",      unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=50", bio:"Hendek'ten. Orta mesafe hat taşımacılığında deneyimli. Düzenli ve disiplinli sürüş profiliyle öne çıkıyor.", sefer:76,  uyari:24, deneyim:4,  perf:73 },
+  { ad:"Hakan Arslan",   unvan:"Kıdemli Sürücü",  img:"https://i.pravatar.cc/100?img=56", bio:"Sakarya merkez. 10 yıllık deneyim. Uluslararası taşımacılık sertifikasına sahip, filo içinde güvenilirliğiyle biliniyor.", sefer:134, uyari:11, deneyim:10, perf:90 },
+  { ad:"Furkan Öz",      unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=60", bio:"Serdivan'dan. Özellikle Sakarya–İstanbul hattında yoğun görev yapıyor. Dakikliğiyle öne çıkıyor.", sefer:79,  uyari:26, deneyim:3,  perf:76 },
+  { ad:"Yusuf Polat",    unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=65", bio:"Adapazarı kökenli. Ağırlıklı olarak bölgesel dağıtım hatlarında çalışıyor. Yük güvenliği konusunda eğitim almış.", sefer:88,  uyari:20, deneyim:5,  perf:83 },
+  { ad:"Kaan Uslu",      unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=19", bio:"Akyazı'dan. Son aylarda uyarı artışı nedeniyle performans takibine alındı. Koçluk programı devam ediyor.", sefer:71,  uyari:31, deneyim:2,  perf:69 },
+  { ad:"Oğuzhan Martin", unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=17", bio:"İzmit kökenli, Sakarya'da ikamet ediyor. Çift dilli (TR/EN) sürücü belgesiyle uluslararası seferlerde de görev alıyor.", sefer:92,  uyari:17, deneyim:6,  perf:87 },
+  { ad:"Erdem Keskinci", unvan:"Sürücü",           img:"https://i.pravatar.cc/100?img=15", bio:"Hendek'ten. Ağır vasıta konusunda deneyimli ancak son dönemde uyarı sayısında artış gözlemlendi. Takip altında.", sefer:74,  uyari:34, deneyim:3,  perf:71 },
+];
+
+function openModal(i) {
+  var d = drivers[i];
+  document.getElementById('mImg').src = d.img;
+  document.getElementById('mName').innerText = d.ad;
+  document.getElementById('mTitle').innerText = d.unvan;
+  document.getElementById('mBio').innerText = d.bio;
+  document.getElementById('mSefer').innerText = d.sefer;
+  document.getElementById('mUyari').innerText = d.uyari;
+  document.getElementById('mDeneyim').innerText = d.deneyim;
+  document.getElementById('mPerfVal').innerText = '%' + d.perf;
+  document.getElementById('mPerfBar').style.width = d.perf + '%';
+  document.getElementById('mPerfBar').style.background = d.perf >= 85 ? '#28a745' : d.perf >= 70 ? '#1e90ff' : '#e74c3c';
+  document.getElementById('driverModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('driverModal').classList.remove('open');
+}
+
+document.getElementById('driverModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  var isLight = document.body.classList.contains('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('themeLabel').textContent = isLight ? '☀️ Açık Mod' : '🌙 Koyu Mod';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
   }
-  (function() {
-    if (localStorage.getItem('theme') === 'light') {
-      document.body.classList.add('light');
-      document.getElementById('themeLabel').textContent = '☀️ Açık Mod';
-    }
-  })();
+})();
 </script>
 
 <script src="yoldas.js"></script>
